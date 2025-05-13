@@ -5,7 +5,7 @@ package de.sesqa.ase.demo;
     import java.util.Arrays;
 
 /**
-     * Hello world!
+     * Hello world! We will be simulating a merge conflict in this file.
      */
     public class App {
         public static void main(String[] args) {
