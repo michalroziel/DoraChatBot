@@ -4,9 +4,11 @@ package de.sesqa.ase.demo;
 
     import java.util.Arrays;
 
-/**
-     * Hello world! We will be simulating a merge conflict in this file.
-     */
+
+
+   //  * Hello world!
+   //  * Hello world!
+
     public class App {
         public static void main(String[] args) {
 
