@@ -42,11 +42,11 @@ jobs:
 
     - name: Build and Test with Maven
       run: mvn clean install
-      working-directory: DoraChatBot
+
 
     - name: Run Maven Tests
       run: mvn clean verify -DdisplayName=true -B
-      working-directory: DoraChatBot
+
 
     - name: Print Maven Test Results
       run: |
