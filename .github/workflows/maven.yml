@@ -47,15 +47,15 @@ jobs:
     # Step 3: Build and test with Maven
     - name: Build and Test with Maven
       run: mvn clean install
-      working-directory: ./DoraChatBot  # Path to POM.XML
+      working-directory: DoraChatBot  # Path to POM.XML
 
       # Step 4: Run Maven Tests
     - name: Run Maven Tests
       run: mvn clean verify -DdisplayName=true -B
-      working-directory: ./DoraChatBot # Path to POM.XML
+      working-directory: DoraChatBot # Path to POM.XML
       continue-on-error: true
 
     - name: Print Maven Test Results       # change working directory as cantine-planer is inside Cantine-Planner
       run: |
         echo "Maven Test Results:"
-        cat ./DoraChatBot/target/surefire-reports/*.txt
+        cat DoraChatBot/target/surefire-reports/*.txt
