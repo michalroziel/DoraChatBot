@@ -49,10 +49,11 @@ jobs:
 
 
     - name: Print Maven Test Results
+      shell: bash
       run: |
         echo "Maven Test Results:"
-        if [ -d DoraChatBot/target/surefire-reports ]; then
-          cat DoraChatBot/target/surefire-reports/*.txt
+        if [ -d target/surefire-reports ]; then
+          cat target/surefire-reports/*.txt
         else
           echo "No test results found."
         fi
