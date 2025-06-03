@@ -29,6 +29,14 @@
 
 
 
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+
+
+
+
 
     </dependencies>
   </dependencyManagement>
@@ -42,6 +50,8 @@
       <version>4.0.0-M1</version>
       <scope>test</scope>
     </dependency>
+
+
 
 
 

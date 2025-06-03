@@ -1,0 +1,61 @@
+name: CI for Maven Project
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+      - development
+
+  workflow_dispatch:                                  # Trigger for manual workflow execution
+    inputs:
+      message:
+        description: 'A custom message to trigger this workflow'
+        required: true
+        default: 'Triggering workflow'
+
+      version:
+        description: 'Specify Java version'
+        required: true
+        default: '21'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest] # Test on Linux, Windows, and macOS
+        java: [21]                                        # Test with Java 21
+
+    steps:
+    # Step 1: Check out the code
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Java
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'temurin'
+        cache: 'maven'
+
+    # Step 3: Build and test with Maven
+    - name: Build and Test with Maven
+      run: mvn clean install
+      working-directory: ./DoraChatBot  # Path to POM.XML
+
+      # Step 4: Run Maven Tests
+    - name: Run Maven Tests
+      run: mvn clean verify -DdisplayName=true -B
+      working-directory: ./DoraChatBot # Path to POM.XML
+      continue-on-error: true
+
+    - name: Print Maven Test Results       # change working directory as cantine-planer is inside Cantine-Planner
+      run: |
+        echo "Maven Test Results:"
+        cat ./DoraChatBot/target/surefire-reports/*.txt
