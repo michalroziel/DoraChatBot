@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class VersionController {
 
-    @Value("${project.version:unknown}")
+    @Value("${version:unknown}")
     private String version;
 
-    @Value("${buildNumber:unknown}")
+    @Value("${buildHash:unknown}")
     private String buildNumber;
 
     @GetMapping("/version")
