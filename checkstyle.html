@@ -67,7 +67,7 @@
 <td>4</td>
 <td>0</td>
 <td>0</td>
-<td>9</td></tr></table></section><section><a name="Files"></a>
+<td>11</td></tr></table></section><section><a name="Files"></a>
 <h3><a name="Files"></a>Files</h3>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -81,15 +81,15 @@
 <td>0</td>
 <td>1</td></tr>
 <tr class="a">
+<td><a href="#de.2Fsesqa.2Fase.2FBaseController.java">de/sesqa/ase/BaseController.java</a></td>
+<td>0</td>
+<td>0</td>
+<td>6</td></tr>
+<tr class="b">
 <td><a href="#de.2Fsesqa.2Fase.2FDoraChatBot.java">de/sesqa/ase/DoraChatBot.java</a></td>
 <td>0</td>
 <td>0</td>
-<td>2</td></tr>
-<tr class="b">
-<td><a href="#de.2Fsesqa.2Fase.2FVersionController.java">de/sesqa/ase/VersionController.java</a></td>
-<td>0</td>
-<td>0</td>
-<td>5</td></tr>
+<td>3</td></tr>
 <tr class="a">
 <td><a href="#version.properties">version.properties</a></td>
 <td>0</td>
@@ -113,22 +113,34 @@
 <td>1</td>
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td></tr>
 <tr class="b">
+<td>imports</td>
+<td><a class="externalLink" href="https://checkstyle.org/checks/imports/unusedimports.html">UnusedImports</a>
+<ul>
+<li>processJavadoc: <code>&quot;false&quot;</code></li></ul></td>
+<td>1</td>
+<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td></tr>
+<tr class="a">
 <td>javadoc</td>
 <td><a class="externalLink" href="https://checkstyle.org/checks/javadoc/javadocpackage.html">JavadocPackage</a></td>
 <td>1</td>
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td></tr>
-<tr class="a">
+<tr class="b">
 <td></td>
 <td><a class="externalLink" href="https://checkstyle.org/checks/javadoc/javadocvariable.html">JavadocVariable</a></td>
 <td>2</td>
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td></tr>
-<tr class="b">
+<tr class="a">
 <td></td>
 <td><a class="externalLink" href="https://checkstyle.org/checks/javadoc/missingjavadocmethod.html">MissingJavadocMethod</a></td>
 <td>2</td>
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td></tr>
-<tr class="a">
+<tr class="b">
 <td>misc</td>
+<td><a class="externalLink" href="https://checkstyle.org/checks/misc/finalparameters.html">FinalParameters</a></td>
+<td>1</td>
+<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td></tr>
+<tr class="a">
+<td></td>
 <td><a class="externalLink" href="https://checkstyle.org/checks/misc/newlineatendoffile.html">NewlineAtEndOfFile</a></td>
 <td>2</td>
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td></tr></table></section><section><a name="Details"></a>
@@ -146,8 +158,8 @@
 <td>misc</td>
 <td>NewlineAtEndOfFile</td>
 <td>File does not end with a newline.</td>
-<td>1</td></tr></table></section><section><a name="desesqaaseDoraChatBot.java"></a>
-<h4><a name="de.2Fsesqa.2Fase.2FDoraChatBot.java"></a>de/sesqa/ase/DoraChatBot.java</h4>
+<td>1</td></tr></table></section><section><a name="desesqaaseBaseController.java"></a>
+<h4><a name="de.2Fsesqa.2Fase.2FBaseController.java"></a>de/sesqa/ase/BaseController.java</h4>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Severity</th>
@@ -157,17 +169,41 @@
 <th>Line</th></tr>
 <tr class="b">
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
-<td>design</td>
-<td>HideUtilityClassConstructor</td>
-<td>Utility classes should not have a public or default constructor.</td>
-<td>6</td></tr>
+<td>imports</td>
+<td>UnusedImports</td>
+<td>Unused import - org.springframework.web.bind.annotation.RestController.</td>
+<td>7</td></tr>
 <tr class="a">
+<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
+<td>javadoc</td>
+<td>JavadocVariable</td>
+<td>Missing a Javadoc comment.</td>
+<td>11</td></tr>
+<tr class="b">
+<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
+<td>javadoc</td>
+<td>JavadocVariable</td>
+<td>Missing a Javadoc comment.</td>
+<td>14</td></tr>
+<tr class="a">
+<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
+<td>design</td>
+<td>DesignForExtension</td>
+<td>Class 'BaseController' looks like designed for extension (can be subclassed), but the method 'index' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'BaseController' final or making the method 'index' static/final/abstract/empty, or adding allowed annotation for the method.</td>
+<td>17</td></tr>
+<tr class="b">
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
 <td>javadoc</td>
 <td>MissingJavadocMethod</td>
 <td>Missing a Javadoc comment.</td>
-<td>8</td></tr></table></section><section><a name="desesqaaseVersionController.java"></a>
-<h4><a name="de.2Fsesqa.2Fase.2FVersionController.java"></a>de/sesqa/ase/VersionController.java</h4>
+<td>17</td></tr>
+<tr class="a">
+<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
+<td>misc</td>
+<td>FinalParameters</td>
+<td>Parameter model should be final.</td>
+<td>18</td></tr></table></section><section><a name="desesqaaseDoraChatBot.java"></a>
+<h4><a name="de.2Fsesqa.2Fase.2FDoraChatBot.java"></a>de/sesqa/ase/DoraChatBot.java</h4>
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>Severity</th>
@@ -183,28 +219,16 @@
 <td>1</td></tr>
 <tr class="a">
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
-<td>javadoc</td>
-<td>JavadocVariable</td>
-<td>Missing a Javadoc comment.</td>
-<td>10</td></tr>
-<tr class="b">
-<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
-<td>javadoc</td>
-<td>JavadocVariable</td>
-<td>Missing a Javadoc comment.</td>
-<td>13</td></tr>
-<tr class="a">
-<td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
 <td>design</td>
-<td>DesignForExtension</td>
-<td>Class 'VersionController' looks like designed for extension (can be subclassed), but the method 'getVersion' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'VersionController' final or making the method 'getVersion' static/final/abstract/empty, or adding allowed annotation for the method.</td>
-<td>16</td></tr>
+<td>HideUtilityClassConstructor</td>
+<td>Utility classes should not have a public or default constructor.</td>
+<td>6</td></tr>
 <tr class="b">
 <td><img src="images/icon_error_sml.gif" alt="" />&#160;Error</td>
 <td>javadoc</td>
 <td>MissingJavadocMethod</td>
 <td>Missing a Javadoc comment.</td>
-<td>16</td></tr></table></section><section><a name="version.properties"></a>
+<td>8</td></tr></table></section><section><a name="version.properties"></a>
 <h4><a name="version.properties"></a>version.properties</h4>
 <table border="0" class="bodyTable">
 <tr class="a">
