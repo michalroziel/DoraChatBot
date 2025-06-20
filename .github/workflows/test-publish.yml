@@ -85,14 +85,6 @@ jobs:
           restore-keys: |
             maven-${{ runner.os }}-
 
-      - name: Cache Checkstyle reports
-        uses: actions/cache@v4
-        with:
-          path: target/
-          key: checkstyle-${{ runner.os }}-${{ github.sha }}
-          restore-keys: |
-            checkstyle-${{ runner.os }}-
-
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -101,6 +93,12 @@ jobs:
 
       - name: Generate site
         run: mvn site -P !checkstyle-on-build -DskipTests
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site
 
   docker-build:
     name: Build and Push Docker Image (latest)
@@ -192,7 +190,7 @@ jobs:
 
   publish_release:
     name: Create Release
-    needs: [build, site]
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
