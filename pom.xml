@@ -39,6 +39,14 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <!-- == .Env == -->
+
+        <dependency>
+          <groupId>io.github.cdimascio</groupId>
+          <artifactId>java-dotenv</artifactId>
+          <version>5.2.2</version>
+        </dependency>
+
         <!-- == Junit 5 == -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
