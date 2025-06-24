@@ -7,11 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DoraChatBot {
     public static void main(final String[] args) {
 
-        try {
+        /*try {
             Application.createQuery("Hello from the Sunny HTW Saar !");
         } catch (Exception e){
             e.printStackTrace();
-        }
-        //SpringApplication.run(DoraChatBot.class, args);
+        }*/
+        SpringApplication.run(DoraChatBot.class, args);
     }
 }

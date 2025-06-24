@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dora ChatBot</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
 <main id="chat-container" class="chat-container">
     <div id="message-area" class="message-area">
     </div>
-    <form id="message-form" class="message-form">
+    <form id="message-form" class="message-form" onsubmit="event.preventDefault(); send();">
         <input type="text" id="message-input" class="message-input" placeholder="Type your message...">
         <button type="submit" id="send-button" class="send-button">Send</button>
     </form>
@@ -27,4 +27,57 @@
 </footer>
 
 </body>
+
+<script>
+    function send() {
+        const input = document.getElementById("message-input");
+        const messageArea = document.getElementById("message-area");
+        const messageText = input.value.trim();
+
+        if (messageText === "") {
+            return;
+        }
+
+        // Create and display user message
+        const userMessage = document.createElement("div");
+        userMessage.classList.add("message", "user-message");
+        userMessage.textContent = messageText;
+        messageArea.appendChild(userMessage);
+
+        const messageToSend = input.value;
+        input.value = ""; // Clear input field
+        messageArea.scrollTop = messageArea.scrollHeight; // Scroll down
+
+        // Send message to the backend
+        fetch('/message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+            body: messageToSend,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text(); // Read the response body as text
+            })
+            .then(textData => {
+                // Create and display bot response
+                const botMessage = document.createElement("div");
+                botMessage.classList.add("message", "bot-message");
+                botMessage.textContent = textData; // Use the text content from the response
+                messageArea.appendChild(botMessage);
+                messageArea.scrollTop = messageArea.scrollHeight; // Scroll to the bottom
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const errorMessage = document.createElement("div");
+                errorMessage.classList.add("message", "bot-message");
+                errorMessage.textContent = "Error: Could not connect to the server.";
+                messageArea.appendChild(errorMessage);
+                messageArea.scrollTop = messageArea.scrollHeight;
+            });
+    }
+</script>
 </html>
