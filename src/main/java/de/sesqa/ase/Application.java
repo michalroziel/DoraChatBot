@@ -17,7 +17,7 @@ public class Application {
 
     System.out.println("Creating query...\n");
 
-    Dotenv dotenv = Dotenv.configure().load();
+    Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
     String apiKey = dotenv.get("API_KEY");
 
 
