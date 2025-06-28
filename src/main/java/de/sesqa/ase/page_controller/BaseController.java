@@ -1,6 +1,7 @@
 package de.sesqa.ase.page_controller;
 
 import de.sesqa.ase.api.APIWrapper;
+import de.sesqa.ase.objects.Message;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,9 +26,9 @@ public class BaseController {
     @ResponseBody
     public String handleMessage(@RequestBody String message) {
         try {
-            String resp = APIWrapper.createQuery(message);
-            if (resp != null && !resp.isEmpty()) {
-                return resp;
+            Message resp = APIWrapper.query(new Message(Message.MessageType.USER, message));
+            if (!resp.isEmpty()) {
+                return resp.getContent();
             } else {
                 return "No response from the AI model.";
             }
