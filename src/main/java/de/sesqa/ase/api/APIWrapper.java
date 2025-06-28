@@ -1,4 +1,4 @@
-package de.sesqa.ase;
+package de.sesqa.ase.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,18 +10,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class Application {
+public class APIWrapper {
 
 
   public static String createQuery(String content) throws IOException, InterruptedException {
 
-    System.out.println("Creating query...\n");
-
     Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
     String apiKey = dotenv.get("API_KEY");
 
-
-    // one line because
     String body = String.format("{\"model\": \"gpt-4.1-nano\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}]}", content);
 
     HttpRequest request = HttpRequest.newBuilder()
@@ -43,10 +39,7 @@ public class Application {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(responseBody);
         messageContent = rootNode.path("choices").get(0).path("message").path("content").asText();
-
-      }
-
-      finally {
+      } finally {
         System.out.println("Query completed.\n");
       }
 

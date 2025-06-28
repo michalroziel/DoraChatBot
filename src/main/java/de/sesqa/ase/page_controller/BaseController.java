@@ -1,5 +1,6 @@
-package de.sesqa.ase;
+package de.sesqa.ase.page_controller;
 
+import de.sesqa.ase.api.APIWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class BaseController {
     @ResponseBody
     public String handleMessage(@RequestBody String message) {
         try {
-            String resp = Application.createQuery(message);
+            String resp = APIWrapper.createQuery(message);
             if (resp != null && !resp.isEmpty()) {
                 return resp;
             } else {
