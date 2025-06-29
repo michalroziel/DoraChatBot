@@ -58,6 +58,14 @@
 </body>
 
 <script>
+    function generateLongUuid() {
+      const array = new Uint8Array(16);
+      window.crypto.getRandomValues(array);
+      return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const uuid = generateLongUuid();
+
     function send() {
         const input = document.getElementById("message-input");
         const messageArea = document.getElementById("message-area");

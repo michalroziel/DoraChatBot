@@ -1,7 +1,7 @@
 package de.sesqa.ase.page_controller;
 
 import de.sesqa.ase.api.APIWrapper;
-import de.sesqa.ase.objects.Message;
+import de.sesqa.ase.entities.Message;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

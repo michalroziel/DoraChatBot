@@ -2,7 +2,7 @@ package de.sesqa.ase.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.sesqa.ase.objects.Message;
+import de.sesqa.ase.entities.Message;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.io.IOException;
