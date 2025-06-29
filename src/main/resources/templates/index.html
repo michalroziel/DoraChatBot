@@ -8,23 +8,52 @@
 </head>
 <body>
 
-<header class="app-header">
-    <h1>Dora ChatBot</h1>
-</header>
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <button class="new-chat-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                New Chat
+            </button>
+        </div>
+        <nav class="chat-history">
+            <ul>
+                <!-- Placeholder for chat history items -->
+                <li class="active"><a href="#">Current Conversation</a></li>
+                <li><a href="#">Spring Boot</a></li>
+                <li><a href="#">CSS</a></li>
+                <li><a href="#">Java</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="https://github.com/michalroziel/DoraChatBot" target="_blank">GitHub</a>
+        </div>
+    </aside>
 
-<main id="chat-container" class="chat-container">
-    <div id="message-area" class="message-area">
+    <div class="main-content">
+        <header class="app-header">
+            <h1>Dora ChatBot</h1>
+        </header>
+
+        <main id="chat-container" class="chat-container">
+            <div id="message-area" class="message-area">
+                <!-- Messages will be appended here -->
+            </div>
+            <form id="message-form" class="message-form" onsubmit="event.preventDefault(); send();">
+                <input type="text" id="message-input" class="message-input" placeholder="Type your message...">
+                <button type="submit" id="send-button" class="send-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </main>
+
+        <footer class="app-footer">
+            <p>Version: <span th:text="${version}">unknown</span>, Commit: <span th:text="${buildNumber}">unknown</span></p>
+        </footer>
     </div>
-    <form id="message-form" class="message-form" onsubmit="event.preventDefault(); send();">
-        <input type="text" id="message-input" class="message-input" placeholder="Type your message...">
-        <button type="submit" id="send-button" class="send-button">Send</button>
-    </form>
-</main>
-
-<footer class="app-footer">
-    <p>Version: <span th:text="${version}">unknown</span>, Commit: <span th:text="${buildNumber}">unknown</span></p>
-    <a href="https://github.com/michalroziel/DoraChatBot">GitHub</a>
-</footer>
+</div>
 
 </body>
 
@@ -48,6 +77,9 @@
         input.value = ""; // Clear input field
         messageArea.scrollTop = messageArea.scrollHeight; // Scroll down
 
+        // Show typing indicator
+        showTypingIndicator();
+
         // Send message to the backend
         fetch('/message', {
             method: 'POST',
@@ -63,6 +95,8 @@
                 return response.text(); // Read the response body as text
             })
             .then(textData => {
+                // Remove typing indicator
+                removeTypingIndicator();
                 // Create and display bot response
                 const botMessage = document.createElement("div");
                 botMessage.classList.add("message", "bot-message");
@@ -72,12 +106,31 @@
             })
             .catch(error => {
                 console.error('Error:', error);
+                removeTypingIndicator();
                 const errorMessage = document.createElement("div");
                 errorMessage.classList.add("message", "bot-message");
                 errorMessage.textContent = "Error: Could not connect to the server.";
                 messageArea.appendChild(errorMessage);
                 messageArea.scrollTop = messageArea.scrollHeight;
             });
+    }
+
+    function showTypingIndicator() {
+        const messageArea = document.getElementById("message-area");
+        if (document.querySelector('.typing-indicator')) return; // Don't add if already present
+
+        const typingIndicator = document.createElement("div");
+        typingIndicator.classList.add("message", "bot-message", "typing-indicator");
+        typingIndicator.innerHTML = `<span></span><span></span><span></span>`;
+        messageArea.appendChild(typingIndicator);
+        messageArea.scrollTop = messageArea.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const typingIndicator = document.querySelector('.typing-indicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
     }
 </script>
 </html>
