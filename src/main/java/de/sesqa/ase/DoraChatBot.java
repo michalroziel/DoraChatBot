@@ -3,7 +3,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"de.sesqa.ase.page_controller", "de.sesqa.ase.api"})
 public class DoraChatBot {
     public static void main(final String[] args) {
 
