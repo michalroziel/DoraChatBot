@@ -2,6 +2,7 @@ package de.sesqa.ase.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,7 @@ public class Conversation {
     }
 
     public List<Message> getMessages() {
-        return messages;
+        return messages == null ? Collections.emptyList() : Collections.unmodifiableList(messages);
     }
 
     public void addMessages(Message message){

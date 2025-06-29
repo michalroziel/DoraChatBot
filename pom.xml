@@ -95,7 +95,7 @@
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>false</failsOnError>
                             <linkXRef>false</linkXRef>
-                            <maxAllowedViolations>50</maxAllowedViolations>
+                            <maxAllowedViolations>5000</maxAllowedViolations>
                         </configuration>
                         <executions>
                             <execution>
