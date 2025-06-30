@@ -26,13 +26,11 @@ public class BaseController {
 
     public BaseController(
         MessageRepository messageRepository,
-        ConversationRepository conversationRepository,
-        @Value("${collectd.host}") String collectdHost,
-        @Value("${collectd.port}") int collectdPort
+        ConversationRepository conversationRepository
     ) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
-        this.collectdClient = new CollectdClient(collectdHost, collectdPort);
+        this.collectdClient = new CollectdClient();
     }
 
     @GetMapping("/")
