@@ -28,6 +28,14 @@
 
 
     <dependencies>
+        <!-- == Spothugs annotations == -->
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>4.8.3</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- == Spring Boot == -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

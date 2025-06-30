@@ -44,7 +44,7 @@ public class APIWrapper {
             System.out.println("Query completed.\n");
         }
 
-        return new Message(Message.MessageType.BOT, messageContent);
+        return new Message(Message.MessageType.BOT, message.getConversation(), messageContent);
 
     }
 

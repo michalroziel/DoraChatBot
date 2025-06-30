@@ -1,6 +1,8 @@
 package de.sesqa.ase.entities;
 
 import jakarta.persistence.*;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 
 @Entity
 public class Message {
@@ -22,13 +24,20 @@ public class Message {
     private MessageType messageType;
     private String content;
 
-    public Message(MessageType messageType, String message) {
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
+    public Message(MessageType messageType, Conversation conversation, String message) {
         this.content = message;
+        this.conversation = conversation;
         this.messageType = messageType;
     }
 
     public MessageType getMessageType() {
         return messageType;
+    }
+
+    @SuppressFBWarnings("EI_EXPOSE_REP")
+    public Conversation getConversation() {
+        return conversation;
     }
 
     public String getContent() {
