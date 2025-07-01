@@ -35,6 +35,12 @@ public class CollectdClient {
             OutputStream os = socket.getOutputStream();
             os.write(metric.getBytes(StandardCharsets.UTF_8));
             os.flush();
+
+            // Lies die Antwort von collectd (optional: Buffer und Timeout setzen)
+            InputStream is = socket.getInputStream();
+            byte[] buffer = new byte[1024];
+            int read = is.read(buffer); // blockiert bis collectd antwortet oder EOF
+            os.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
