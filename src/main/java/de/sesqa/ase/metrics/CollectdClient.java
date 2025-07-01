@@ -28,7 +28,7 @@ public class CollectdClient {
         File socketFile = new File(COLLECTD_UNIXSOCK);
         try (AFUNIXSocket socket = AFUNIXSocket.newInstance()) {
             socket.connect(new AFUNIXSocketAddress(socketFile));
-            String metric = String.format("PUTVAL \"%s/%s-%s/%s\" interval=10 N:%d%n", InetAddress.getLocalHost().getHostName(), "dorachatbot", typeInstance, type.getTypeName(), value);
+            String metric = String.format("PUTVAL \"%s/%s-%s/%s\" interval=10 N:%d%n", InetAddress.getLocalHost().getHostName() + "-app", "dorachatbot", typeInstance, type.getTypeName(), value);
             OutputStream os = socket.getOutputStream();
             os.write(metric.getBytes(StandardCharsets.UTF_8));
             os.flush();
