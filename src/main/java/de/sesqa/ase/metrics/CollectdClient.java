@@ -11,6 +11,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 
 public class CollectdClient {
@@ -29,7 +30,7 @@ public class CollectdClient {
         try (AFUNIXSocket socket = AFUNIXSocket.newInstance()) {
             socket.connect(new AFUNIXSocketAddress(socketFile));
             //String metric = String.format("PUTVAL \"%s/%s/%s\" interval=10 N:%d%n", "dorachatbot", typeInstance, type.getTypeName(), value);
-            String metric = String.format("PUTVAL \"dorachatbot/test/gauge\" interval=10 N:123\n");
+            String metric = String.format("PUTVAL \"dorachatbot/test/gauge\" interval=10 N:123%n");
             System.out.println("Sending: " + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));
             OutputStream os = socket.getOutputStream();
             os.write(metric.getBytes(StandardCharsets.UTF_8));
