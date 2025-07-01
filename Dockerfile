@@ -4,7 +4,7 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM --platform=$TARGETPLATFORM eclipse-temurin:21-jre
-RUN mkdir -p /app && chmod 777 /app
 WORKDIR /app
+RUN mkdir -p /app && chmod 777 /app
 COPY --from=build /app/target/*.jar app.jar
 CMD ["java", "-jar", "app.jar"]
