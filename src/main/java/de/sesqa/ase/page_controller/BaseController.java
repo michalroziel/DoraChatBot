@@ -40,6 +40,12 @@ public class BaseController {
         return "index";
     }
 
+    @GetMapping("/ping")
+    @ResponseBody
+    public String ping() {
+        return "pong";
+    }
+
     @PostMapping("/message")
     @ResponseBody
     public String handleMessage(@RequestBody String message) {
