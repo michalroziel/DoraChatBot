@@ -46,7 +46,7 @@ public class BaseController {
         Conversation conversation = new Conversation();
         conversationRepository.save(conversation);
                     long count = messageRepository.count();
-            collectdClient.sendMetric("messages", "totalcount", count);
+            collectdClient.sendMetric("messages", CollectdClient.CollectdType.COUNTER, count);
 
         System.out.println("New conversation started with ID: " + conversation.getId());
         try {
