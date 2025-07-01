@@ -6,6 +6,7 @@ import org.newsclub.net.unix.AFUNIXSocketAddress;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -24,7 +25,8 @@ public class CollectdClient {
         Beispiel:
         dorachatbot.messages.totalcount.[VALUE]
      */
-    @SuppressFBWarnings(value = "DMI_HARDCODED_ABSOLUTE_FILENAME", justification = "Socket path is intentionally hardcoded for collectd integration")
+
+    @SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME", "RR_NOT_CHECKED"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
     public void sendMetric(String typeInstance, CollectdType type, long value) {
         File socketFile = new File(COLLECTD_UNIXSOCK);
         try (AFUNIXSocket socket = AFUNIXSocket.newInstance()) {
@@ -39,7 +41,7 @@ public class CollectdClient {
             // Lies die Antwort von collectd (optional: Buffer und Timeout setzen)
             InputStream is = socket.getInputStream();
             byte[] buffer = new byte[1024];
-            int read = is.read(buffer); // blockiert bis collectd antwortet oder EOF
+            is.read(buffer); // blockiert bis collectd antwortet oder EOF
             os.close();
         } catch (Exception e) {
             e.printStackTrace();
