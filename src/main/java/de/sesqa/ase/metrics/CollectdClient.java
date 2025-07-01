@@ -12,19 +12,19 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
-public class CollectdClient {
-    @Value("${collectd.unixsocket.path}")
-    private String socketPath;
 
+public class CollectdClient {
+
+    private static final String COLLECTD_UNIXSOCK = "/var/run/collectd-unixsock";
     /*
         Auflösung von Collectd Variablen ähnlich zu Package namen:
         plugin.typeinstance.type.value
         Beispiel:
         dorachatbot.messages.totalcount.[VALUE]
      */
-    @SuppressFBWarnings(value = "PATH_TRAVERSAL_IN", justification = "Socket path is controlled and safe in this context")
+    @SuppressFBWarnings(value = "DMI_HARDCODED_ABSOLUTE_FILENAME", justification = "Socket path is intentionally hardcoded for collectd integration")
     public void sendMetric(String typeInstance, String type, long value) {
-        File socketFile = new File(socketPath);
+        File socketFile = new File(COLLECTD_UNIXSOCK);
         try (AFUNIXSocket socket = AFUNIXSocket.newInstance()) {
             socket.connect(new AFUNIXSocketAddress(socketFile));
             String metric = String.format("PUTVAL \"%s/%s-%s/%s\" interval=10 N:%d%n",
