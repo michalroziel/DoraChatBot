@@ -31,8 +31,8 @@ public class CollectdClient {
         File socketFile = new File(COLLECTD_UNIXSOCK);
         try (AFUNIXSocket socket = AFUNIXSocket.newInstance()) {
             socket.connect(new AFUNIXSocketAddress(socketFile));
-            //String metric = String.format("PUTVAL \"%s/%s/%s\" interval=10 N:%d%n", "dorachatbot", typeInstance, type.getTypeName(), value);
-            String metric = String.format("PUTVAL \"dorachatbot/test/gauge\" interval=10 N:123%n");
+            String metric = String.format("PUTVAL \"%s/%s/%s\" interval=10 N:%d%n", "dorachatbot", typeInstance, type.getTypeName(), value);
+            //String metric = String.format("PUTVAL \"dorachatbot/test/gauge\" interval=10 N:123%n");
             System.out.println("Sending (Human): " + metric);
             System.out.println("Sending (Bytes): " + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));
             OutputStream os = socket.getOutputStream();
