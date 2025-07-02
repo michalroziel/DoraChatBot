@@ -38,7 +38,6 @@ public class CollectdClient {
         ) {
             String metric = formatMetric(typeInstance, type, value);
             logMetric(metric);
-
             writeMetricToSocket(metric, os);
             readCollectdResponse(is);
         } catch (Exception e) {

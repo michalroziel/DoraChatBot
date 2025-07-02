@@ -21,7 +21,6 @@ public class BaseController {
 
     private final MessageRepository messageRepository;
     private final ConversationRepository conversationRepository;
-
     private final CollectdClient collectdClient;
 
     public BaseController(
@@ -37,6 +36,7 @@ public class BaseController {
     public String index(Model model) {
         model.addAttribute("version", version);
         model.addAttribute("buildNumber", buildNumber);
+
         return "index";
     }
 
@@ -49,26 +49,43 @@ public class BaseController {
     @PostMapping("/message")
     @ResponseBody
     public String handleMessage(@RequestBody String message) {
-        Conversation conversation = new Conversation();
-        conversationRepository.save(conversation);
-                    long count = messageRepository.count();
-            collectdClient.sendMetric("received", CollectdClient.CollectdType.GAUGE, count);
-
-        System.out.println("New conversation started with ID: " + conversation.getId());
         try {
-            Message userMsg = new Message(Message.MessageType.USER, conversation, message);
-            messageRepository.save(userMsg);
+            Conversation conversation = createConversation();
+            sendReceivedMetrics();
 
-            Message resp = APIWrapper.query(userMsg);
-            if (!resp.isEmpty()) {
-                messageRepository.save(resp);
-                return resp.getContent();
-            } else {
+            Message userMsg = saveUserMessage(conversation, message);
+            Message responseMessage = APIWrapper.query(userMsg);
+
+            if (responseMessage.isEmpty()) {
                 return "No response from the AI model.";
             }
-        } catch (Exception e){
+            messageRepository.save(responseMessage);
+
+            return responseMessage.getContent();
+        }catch (Exception e){
             e.printStackTrace();
+
             return "Error processing message: " + e.getMessage();
         }
+    }
+
+    private Conversation createConversation() {
+        Conversation conversation = new Conversation();
+        conversationRepository.save(conversation);
+        System.out.println("New conversation started with ID: " + conversation.getId());
+
+        return conversation;
+    }
+
+    private void sendReceivedMetrics() {
+        long count = messageRepository.count();
+        collectdClient.sendMetric("received", CollectdClient.CollectdType.GAUGE, count);
+    }
+
+    private Message saveUserMessage(Conversation conversation, String message) {
+        Message userMsg = new Message(Message.MessageType.USER, conversation, message);
+        messageRepository.save(userMsg);
+
+        return userMsg;
     }
 }
