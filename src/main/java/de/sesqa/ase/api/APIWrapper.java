@@ -13,39 +13,44 @@ import java.net.http.HttpResponse;
 
 public class APIWrapper {
 
+    private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public static Message query(Message message) throws IOException, InterruptedException {
+        HttpRequest request = buildHttpRequest(message.getContent());
+        String responseBody = "";
 
-        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-        String apiKey = dotenv.get("API_KEY");
+        try {
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+            responseBody = parseHttpResponse(response.body());
+            
+        }catch (IOException | InterruptedException e) {
+            System.out.println("Error during API request: " + e.getMessage());
+        }finally {
+            System.out.println("Query completed.\n");
+        }
 
-        String body = String.format("{\"model\": \"gpt-4.1-nano\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}]}", message.getContent());
+        return new Message(Message.MessageType.BOT, message.getConversation(), responseBody);
+    }
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.openai.com/v1/chat/completions"))
+    private static HttpRequest buildHttpRequest(String messageContent) {
+        String body = String.format("{\"model\": \"gpt-4.1-nano\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}]}", messageContent);
+        String apiURL = "https://api.openai.com/v1/chat/completions";
+        String apiKey = DOTENV.get("API_KEY");
+
+        return HttpRequest.newBuilder()
+                .uri(URI.create(apiURL))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + apiKey)
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
+    }
 
-        String messageContent;
-        try (HttpClient client = HttpClient.newHttpClient()) {
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            String responseBody = response.body();
-
-
-            // Parse response body to extract content inside message
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(responseBody);
-            messageContent = rootNode.path("choices").get(0).path("message").path("content").asText();
-        } finally {
-            System.out.println("Query completed.\n");
-        }
-
-        return new Message(Message.MessageType.BOT, message.getConversation(), messageContent);
-
+    private static String parseHttpResponse(String responseBody) throws IOException {
+        // Parse response body to extract content inside message
+        JsonNode rootNode = OBJECT_MAPPER.readTree(responseBody);
+        return rootNode.path("choices").get(0).path("message").path("content").asText();
     }
 
 
