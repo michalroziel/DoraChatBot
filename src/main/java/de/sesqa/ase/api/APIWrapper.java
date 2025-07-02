@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sesqa.ase.entities.Message;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,7 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class APIWrapper {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(APIWrapper.class);
     private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -26,9 +28,9 @@ public class APIWrapper {
             responseBody = parseHttpResponse(response.body());
             
         }catch (IOException | InterruptedException e) {
-            System.out.println("Error during API request: " + e.getMessage());
+            LOGGER.error("Error during API request: " + e.getMessage());
         }finally {
-            System.out.println("Query completed.\n");
+            LOGGER.info("Query completed.\n");
         }
 
         return new Message(Message.MessageType.BOT, message.getConversation(), responseBody);

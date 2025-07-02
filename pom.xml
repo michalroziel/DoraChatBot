@@ -97,6 +97,12 @@
             <version>5.18.0</version>
             <scope>test</scope>
         </dependency>
+        <!-- == log4J 2 for Logging == -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.24.3</version>
+        </dependency>
     </dependencies>
 
     <!-- == Profile for Checkstyle so that it can be disabled for mvn site == -->
@@ -275,7 +281,6 @@
             </plugin>
         </plugins>
     </build>
-
 
     <reporting>
         <plugins>

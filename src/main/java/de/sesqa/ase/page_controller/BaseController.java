@@ -6,6 +6,8 @@ import de.sesqa.ase.entities.Message;
 import de.sesqa.ase.metrics.CollectdClient;
 import de.sesqa.ase.repositories.ConversationRepository;
 import de.sesqa.ase.repositories.MessageRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class BaseController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
+
     @Value("${version:unknown}")
     private String version;
 
@@ -57,13 +61,15 @@ public class BaseController {
             Message responseMessage = APIWrapper.query(userMsg);
 
             if (responseMessage.isEmpty()) {
+                LOGGER.info("Response message is empty");
+
                 return "No response from the AI model.";
             }
             messageRepository.save(responseMessage);
 
             return responseMessage.getContent();
         }catch (Exception e){
-            e.printStackTrace();
+            LOGGER.error("Error processing message", e);
 
             return "Error processing message: " + e.getMessage();
         }
@@ -72,7 +78,7 @@ public class BaseController {
     private Conversation createConversation() {
         Conversation conversation = new Conversation();
         conversationRepository.save(conversation);
-        System.out.println("New conversation started with ID: " + conversation.getId());
+        LOGGER.info("New conversation started with ID: " + conversation.getId());
 
         return conversation;
     }

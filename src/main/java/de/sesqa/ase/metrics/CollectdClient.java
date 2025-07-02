@@ -3,21 +3,20 @@ package de.sesqa.ase.metrics;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.newsclub.net.unix.AFUNIXSocket;
 import org.newsclub.net.unix.AFUNIXSocketAddress;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 
 public class CollectdClient {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CollectdClient.class);
     private static final String COLLECTD_UNIXSOCK = "/var/run/collectd-unixsock";
 
     /*
@@ -41,7 +40,7 @@ public class CollectdClient {
             writeMetricToSocket(metric, os);
             readCollectdResponse(is);
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -57,8 +56,8 @@ public class CollectdClient {
     }
 
     private void logMetric(String metric) {
-        System.out.println("Sending (Human): " + metric);
-        System.out.println("Sending (Bytes): " + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));
+        LOGGER.info("Sending (Human): " + metric);
+        LOGGER.info("Sending (Bytes): " + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));
     }
 
     private void writeMetricToSocket(String metric, OutputStream os) throws IOException {
