@@ -13,6 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 public class BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
@@ -42,6 +48,47 @@ public class BaseController {
         model.addAttribute("buildNumber", buildNumber);
 
         return "index";
+    }
+
+    @GetMapping("/api/chat/history")
+    @ResponseBody
+    public List<Map<String, Object>> getHistory() {
+        return conversationRepository.findAll().stream()
+                .map(conversation -> {
+                    // Use the first message's content as a title, or a default if there are no messages.
+                    String title = conversation.getMessages().stream()
+                            .findFirst()
+                            .map(Message::getContent)
+                            .orElse("Conversation " + conversation.getId());
+
+                    // Truncate long titles to keep the UI clean.
+                    if (title.length() > 35) {
+                        title = title.substring(0, 30) + "...";
+                    }
+
+                    Map<String, Object> summary = new HashMap<>();
+                    summary.put("id", conversation.getId());
+                    summary.put("title", title);
+                    return summary;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/chat/conversation/{id}")
+    @ResponseBody
+    public List<Map<String, String>> getConversationMessages(@PathVariable Long id) {
+        return conversationRepository.findById(id)
+                .map(conversation -> conversation.getMessages().stream()
+                        .map(message -> {
+                            Map<String, String> messageData = new HashMap<>();
+                            messageData.put("content", message.getContent());
+                            // Convert the MessageType enum to a String
+                            messageData.put("role", message.getMessageType().name());
+                            return messageData;
+                        })
+                        .collect(Collectors.toList()))
+                .orElse(new ArrayList<>()); // Return an empty list if conversation not found
+
     }
 
     @GetMapping("/ping")

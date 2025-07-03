@@ -8,19 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageArea = document.getElementById("message-area");
     const newChatButton = document.getElementById("new-chat-button");
 
-    if (messageForm && input && messageArea) {
         messageForm.addEventListener('submit', (event) => {
             event.preventDefault(); // Prevent the default form submission
             handleSendMessage(input, messageArea);
         });
-    }
 
-
-    if (newChatButton && messageArea) {
         newChatButton.addEventListener('click', () => {
             clearArea(messageArea);
         });
-    }
+        loadChatHistory();
 });
 
 /**
@@ -70,6 +66,65 @@ function appendMessage(element, container) {
  */
 function scrollToBottom(container) {
     container.scrollTop = container.scrollHeight;
+}
+
+async function loadChatHistory() {
+    try {
+        const response = await fetch('/api/chat/history');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const history = await response.json();
+        const historyList = document.getElementById('chat-history');
+        historyList.innerHTML = ''; // Clear previous list
+
+        history.forEach(conversation => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `#`;
+            link.textContent = conversation.title;
+            link.dataset.conversationId = conversation.id;
+
+            link.onclick = (event) => {
+                event.preventDefault();
+                loadChatConversation(conversation.id); // Call the new function
+            };
+
+            listItem.appendChild(link);
+            historyList.appendChild(listItem);
+        });
+    } catch (error) {
+        console.error("Could not load chat history:", error);
+    }
+}
+
+/**
+ * Fetches a specific conversation from the server and displays its messages.
+ * @param {number} conversationId - The ID of the conversation to load.
+ */
+async function loadChatConversation(conversationId) {
+    const messageArea = document.getElementById("message-area");
+    clearArea(messageArea); // Clear current messages
+
+    try {
+        const response = await fetch(`/api/chat/conversation/${conversationId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const messages = await response.json();
+
+        messages.forEach(message => {
+            // Use the role from the server to apply the correct CSS class
+            const messageClass = message.role.toLocaleLowerCase() === 'user' ? 'user-message' : 'bot-message';
+            const messageElement = createMessageElement(message.content, [messageClass]);
+            appendMessage(messageElement, messageArea);
+        });
+
+    } catch (error) {
+        console.error(`Could not load conversation ${conversationId}:`, error);
+        const errorMessage = createMessageElement("Error: Could not load chat.", ["bot-message"]);
+        appendMessage(errorMessage, messageArea);
+    }
 }
 
 /**
