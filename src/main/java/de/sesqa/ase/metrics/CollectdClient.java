@@ -5,6 +5,7 @@ import org.newsclub.net.unix.AFUNIXSocket;
 import org.newsclub.net.unix.AFUNIXSocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +18,9 @@ import java.util.Arrays;
 public class CollectdClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CollectdClient.class);
-    private static final String COLLECTD_UNIXSOCK = "/var/run/collectd-unixsock";
+
+    @Value("${collectd.socket:/var/run/collectd-unixsock}")
+    private String collectdSocket;
 
     /*
         Auflösung von Collectd Variablen ähnlich zu Package namen:
@@ -26,9 +29,12 @@ public class CollectdClient {
         dorachatbot.messages.totalcount.[VALUE]
      */
 
-    @SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME", "RR_NOT_CHECKED"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
+    @SuppressFBWarnings(
+            value = "PATH_TRAVERSAL_IN",
+            justification = "Socket path is loaded from a trusted configuration file and not user-controlled"
+    )
     public void sendMetric(String typeInstance, CollectdType type, long value) {
-        File socketFile = new File(COLLECTD_UNIXSOCK);
+        File socketFile = new File(collectdSocket);
 
         try (
                 AFUNIXSocket socket = connectToCollectdSocket(socketFile);
@@ -40,7 +46,7 @@ public class CollectdClient {
             writeMetricToSocket(metric, os);
             readCollectdResponse(is);
         } catch (Exception e) {
-
+            LOGGER.error("Failed to send metric to collectd" + e.getMessage());
         }
     }
 
@@ -65,10 +71,17 @@ public class CollectdClient {
         os.flush();
     }
 
+    //@SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME", "RR_NOT_CHECKED"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
     private void readCollectdResponse(InputStream is) throws IOException {
         // Lies die Antwort von collectd (optional: Buffer und Timeout setzen)
         byte[] buffer = new byte[1024];
-        is.read(buffer); // blockiert bis collectd antwortet oder EOF
+        int bytesRead = is.read(buffer);  // blockiert bis collectd antwortet oder EOF
+
+        if (bytesRead != -1) {
+            String response = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
+            System.out.println("Collectd responded: " + response);
+        }
+
     }
 
     public enum CollectdType {
