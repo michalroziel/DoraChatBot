@@ -11,18 +11,14 @@
 <div class="app-layout">
     <aside class="sidebar">
         <div class="sidebar-header">
-            <button class="new-chat-button">
+            <button class="new-chat-button" id = "new-chat-button">
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 New Chat
             </button>
         </div>
         <nav class="chat-history">
-            <ul>
-                <!-- Placeholder for chat history items -->
-                <li class="active"><a href="#">Current Conversation</a></li>
-                <li><a href="#">Spring Boot</a></li>
-                <li><a href="#">CSS-Info</a></li>
-                <li><a href="#">Java</a></li>
+            <ul id="chat-history">
+                <!-- Chat history will be loaded here dynamically by JavaScript -->
             </ul>
         </nav>
         <div class="sidebar-footer">
@@ -39,7 +35,7 @@
             <div id="message-area" class="message-area">
                 <!-- Messages will be appended here -->
             </div>
-            <form id="message-form" class="message-form" onsubmit="event.preventDefault(); send();">
+            <form id="message-form" class="message-form" onsubmit="event.preventDefault()">
                 <input type="text" id="message-input" class="message-input" placeholder="Type your message...">
                 <button type="submit" id="send-button" class="send-button">
                     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -54,91 +50,6 @@
         </footer>
     </div>
 </div>
-
+<script th:src="@{/BackendConnection.js}"></script>
 </body>
-
-<script>
-    function generateLongUuid() {
-      const array = new Uint8Array(16);
-      window.crypto.getRandomValues(array);
-      return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    const uuid = generateLongUuid();
-
-    function send() {
-        const input = document.getElementById("message-input");
-        const messageArea = document.getElementById("message-area");
-        const messageText = input.value.trim();
-
-        if (messageText === "") {
-            return;
-        }
-
-        // Create and display user message
-        const userMessage = document.createElement("div");
-        userMessage.classList.add("message", "user-message");
-        userMessage.textContent = messageText;
-        messageArea.appendChild(userMessage);
-
-        const messageToSend = input.value;
-        input.value = ""; // Clear input field
-        messageArea.scrollTop = messageArea.scrollHeight; // Scroll down
-
-        // Show typing indicator
-        showTypingIndicator();
-
-        // Send message to the backend
-        fetch('/message', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain',
-            },
-            body: messageToSend,
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text(); // Read the response body as text
-            })
-            .then(textData => {
-                // Remove typing indicator
-                removeTypingIndicator();
-                // Create and display bot response
-                const botMessage = document.createElement("div");
-                botMessage.classList.add("message", "bot-message");
-                botMessage.textContent = textData; // Use the text content from the response
-                messageArea.appendChild(botMessage);
-                messageArea.scrollTop = messageArea.scrollHeight; // Scroll to the bottom
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                removeTypingIndicator();
-                const errorMessage = document.createElement("div");
-                errorMessage.classList.add("message", "bot-message");
-                errorMessage.textContent = "Error: Could not connect to the server.";
-                messageArea.appendChild(errorMessage);
-                messageArea.scrollTop = messageArea.scrollHeight;
-            });
-    }
-
-    function showTypingIndicator() {
-        const messageArea = document.getElementById("message-area");
-        if (document.querySelector('.typing-indicator')) return; // Don't add if already present
-
-        const typingIndicator = document.createElement("div");
-        typingIndicator.classList.add("message", "bot-message", "typing-indicator");
-        typingIndicator.innerHTML = `<span></span><span></span><span></span>`;
-        messageArea.appendChild(typingIndicator);
-        messageArea.scrollTop = messageArea.scrollHeight;
-    }
-
-    function removeTypingIndicator() {
-        const typingIndicator = document.querySelector('.typing-indicator');
-        if (typingIndicator) {
-            typingIndicator.remove();
-        }
-    }
-</script>
 </html>
