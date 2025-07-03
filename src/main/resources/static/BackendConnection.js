@@ -1,3 +1,4 @@
+let currentConversationId = null;
 /**
  * Main entry point. Attaches an event listener to the DOMContentLoaded event.
  * Once the DOM is fully loaded, it finds the message form and attaches a submit event listener.
@@ -14,11 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         newChatButton.addEventListener('click', () => {
-            clearArea(messageArea);
+            startNewChat();
         });
         loadChatHistory();
 });
-
+/**
+ * Resets the chat interface for a new conversation.
+ */
+function startNewChat() {
+    currentConversationId = null;
+    const messageArea = document.getElementById("message-area");
+    const input = document.getElementById("message-input");
+    clearArea(messageArea);
+    input.value = '';
+    console.log("Started new chat session.");
+}
 /**
  * Clears all messages from the chat container.
  * @param {HTMLElement} container - The message container to clear.
@@ -119,6 +130,7 @@ async function loadChatConversation(conversationId) {
             const messageElement = createMessageElement(message.content, [messageClass]);
             appendMessage(messageElement, messageArea);
         });
+        currentConversationId = conversationId; // Set the active conversation
 
     } catch (error) {
         console.error(`Could not load conversation ${conversationId}:`, error);
@@ -153,21 +165,22 @@ function removeTypingIndicator(container) {
 /**
  * Sends a message to the server via a POST request.
  * @param {string} message - The message to send.
- * @returns {Promise<string>} A promise that resolves with the server's text response.
+ * @param {string|null} conversationId - The ID of the current conversation, or null for a new one.
+ * @returns {Promise<object>} A promise that resolves with the server's JSON response.
  * @throws {Error} If the network response is not ok.
  */
-async function sendMessageToServer(message) {
-    const response = await fetch('/message', {
+async function sendMessageToServer(message, conversationId) {
+    const response = await fetch('/api/chat/message', {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: message,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: message, conversationId: conversationId }),
     });
 
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
 
-    return await response.text();
+    return await response.json();
 }
 
 /**
@@ -193,18 +206,24 @@ async function handleSendMessage(inputEl, messageAreaEl) {
     showTypingIndicator(messageAreaEl);
 
     try {
-        // 4. Send the message to the server and wait for the response.
-        const botResponse = await sendMessageToServer(messageToSend);
-        const botMessage = createMessageElement(botResponse, ["bot-message"]);
+        // 4. Send the message and conversation ID to the server.
+        const response = await sendMessageToServer(messageToSend, currentConversationId);
+        const botMessage = createMessageElement(response.content, ["bot-message"]);
 
-        // 5. Remove the typing indicator and display the bot's message.
+        // 5. Update conversation ID and reload history if it's a new chat.
+        if (!currentConversationId) {
+            currentConversationId = response.conversationId;
+            await loadChatHistory();
+        }
+
+        // 6. Remove the typing indicator and display the bot's message.
         removeTypingIndicator(messageAreaEl);
         appendMessage(botMessage, messageAreaEl);
     } catch (error) {
         console.error("Error:", error);
         const errorMessage = createMessageElement("Error: Could not connect to the server.", ["bot-message"]);
 
-        // 6. If an error occurs, remove the indicator and show an error message.
+        // 7. If an error occurs, remove the indicator and show an error message.
         removeTypingIndicator(messageAreaEl);
         appendMessage(errorMessage, messageAreaEl);
     }

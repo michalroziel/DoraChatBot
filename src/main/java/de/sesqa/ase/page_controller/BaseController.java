@@ -97,28 +97,40 @@ public class BaseController {
         return "pong";
     }
 
-    @PostMapping("/message")
+    @PostMapping("/api/chat/message")
     @ResponseBody
-    public String handleMessage(@RequestBody String message) {
+    public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
         try {
-            Conversation conversation = createConversation();
+            Conversation conversation;
+            if (request.getConversationId() != null) {
+                // Use existing conversation or create a new one if ID is invalid
+                conversation = conversationRepository.findById(request.getConversationId())
+                        .orElseGet(this::createConversation);
+            } else {
+                // Create a new conversation if no ID is provided
+                conversation = createConversation();
+            }
+
             sendReceivedMetrics();
 
-            Message userMsg = saveUserMessage(conversation, message);
+            Message userMsg = saveUserMessage(conversation, request.getContent());
             Message responseMessage = APIWrapper.query(userMsg);
 
             if (responseMessage.isEmpty()) {
                 LOGGER.info("Response message is empty");
-
-                return "No response from the AI model.";
+                return new ChatMessageResponse("No response from the AI model.", conversation.getId());
             }
-            messageRepository.save(responseMessage);
 
-            return responseMessage.getContent();
-        }catch (Exception e){
+            // Create a new Message for the bot's response and link it to the conversation
+            Message botMessage = new Message(Message.MessageType.BOT, conversation, responseMessage.getContent());
+            messageRepository.save(botMessage);
+
+            return new ChatMessageResponse(botMessage.getContent(), conversation.getId());
+        } catch (Exception e) {
             LOGGER.error("Error processing message", e);
-
-            return "Error processing message: " + e.getMessage();
+            // Return an error response, conversationId might be null if it failed early
+            Long conversationId = (request != null) ? request.getConversationId() : null;
+            return new ChatMessageResponse("Error processing message: " + e.getMessage(), conversationId);
         }
     }
 
