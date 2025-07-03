@@ -13,10 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -34,8 +31,8 @@ public class BaseController {
     private final CollectdClient collectdClient;
 
     public BaseController(
-        MessageRepository messageRepository,
-        ConversationRepository conversationRepository
+            MessageRepository messageRepository,
+            ConversationRepository conversationRepository
     ) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
@@ -52,43 +49,31 @@ public class BaseController {
 
     @GetMapping("/api/chat/history")
     @ResponseBody
-    public List<Map<String, Object>> getHistory() {
+    public List<ConversationSummaryResponse> getHistory() {
         return conversationRepository.findAll().stream()
                 .map(conversation -> {
-                    // Use the first message's content as a title, or a default if there are no messages.
                     String title = conversation.getMessages().stream()
                             .findFirst()
                             .map(Message::getContent)
                             .orElse("Conversation " + conversation.getId());
 
-                    // Truncate long titles to keep the UI clean.
                     if (title.length() > 35) {
                         title = title.substring(0, 30) + "...";
                     }
 
-                    Map<String, Object> summary = new HashMap<>();
-                    summary.put("id", conversation.getId());
-                    summary.put("title", title);
-                    return summary;
+                    return new ConversationSummaryResponse(conversation.getId(), title);
                 })
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/api/chat/conversation/{id}")
     @ResponseBody
-    public List<Map<String, String>> getConversationMessages(@PathVariable Long id) {
+    public List<MessageResponse> getConversationMessages(@PathVariable Long id) {
         return conversationRepository.findById(id)
                 .map(conversation -> conversation.getMessages().stream()
-                        .map(message -> {
-                            Map<String, String> messageData = new HashMap<>();
-                            messageData.put("content", message.getContent());
-                            // Convert the MessageType enum to a String
-                            messageData.put("role", message.getMessageType().name());
-                            return messageData;
-                        })
+                        .map(message -> new MessageResponse(message.getContent(), message.getMessageType().name()))
                         .collect(Collectors.toList()))
-                .orElse(new ArrayList<>()); // Return an empty list if conversation not found
-
+                .orElse(List.of()); // Return an empty list if conversation not found
     }
 
     @GetMapping("/ping")
@@ -103,11 +88,9 @@ public class BaseController {
         try {
             Conversation conversation;
             if (request.getConversationId() != null) {
-                // Use existing conversation or create a new one if ID is invalid
                 conversation = conversationRepository.findById(request.getConversationId())
                         .orElseGet(this::createConversation);
             } else {
-                // Create a new conversation if no ID is provided
                 conversation = createConversation();
             }
 
@@ -121,14 +104,12 @@ public class BaseController {
                 return new ChatMessageResponse("No response from the AI model.", conversation.getId());
             }
 
-            // Create a new Message for the bot's response and link it to the conversation
             Message botMessage = new Message(Message.MessageType.BOT, conversation, responseMessage.getContent());
             messageRepository.save(botMessage);
 
             return new ChatMessageResponse(botMessage.getContent(), conversation.getId());
         } catch (Exception e) {
             LOGGER.error("Error processing message", e);
-            // Return an error response, conversationId might be null if it failed early
             Long conversationId = (request != null) ? request.getConversationId() : null;
             return new ChatMessageResponse("Error processing message: " + e.getMessage(), conversationId);
         }
