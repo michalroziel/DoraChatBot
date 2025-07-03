@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 
+@SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME", "RR_NOT_CHECKED"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
 public class CollectdClient {
 
     private static final String COLLECTD_UNIXSOCK = "/var/run/collectd-unixsock";
@@ -26,7 +27,6 @@ public class CollectdClient {
         dorachatbot.messages.totalcount.[VALUE]
      */
 
-    @SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME", "RR_NOT_CHECKED"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
     public void sendMetric(String typeInstance, CollectdType type, long value) {
         File socketFile = new File(COLLECTD_UNIXSOCK);
         try (AFUNIXSocket socket = AFUNIXSocket.newInstance()) {
