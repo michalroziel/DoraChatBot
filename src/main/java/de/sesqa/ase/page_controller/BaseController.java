@@ -1,6 +1,10 @@
 package de.sesqa.ase.page_controller;
 
 import de.sesqa.ase.api.APIWrapper;
+import de.sesqa.ase.dto.ChatMessageRequest;
+import de.sesqa.ase.dto.ChatMessageResponse;
+import de.sesqa.ase.dto.ConversationSummaryResponse;
+import de.sesqa.ase.dto.MessageResponse;
 import de.sesqa.ase.entities.Conversation;
 import de.sesqa.ase.entities.Message;
 import de.sesqa.ase.metrics.CollectdClient;

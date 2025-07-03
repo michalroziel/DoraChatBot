@@ -1,4 +1,4 @@
-package de.sesqa.ase.page_controller;
+package de.sesqa.ase.dto;
 
 public class ChatMessageRequest {
     private String content;
