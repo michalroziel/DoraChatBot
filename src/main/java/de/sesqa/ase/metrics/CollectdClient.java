@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 
-@SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME", "RR_NOT_CHECKED"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
+@SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
 public class CollectdClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CollectdClient.class);
@@ -28,12 +28,8 @@ public class CollectdClient {
         dorachatbot.messages.totalcount.[VALUE]
      */
 
-    @SuppressFBWarnings(
-            value = "PATH_TRAVERSAL_IN",
-            justification = "Socket path is loaded from a trusted configuration file and not user-controlled"
-    )
     public void sendMetric(String typeInstance, CollectdType type, long value) {
-        File socketFile = new File(collectdSocket);
+        File socketFile = new File(COLLECTD_UNIXSOCK);
 
         try (
                 AFUNIXSocket socket = connectToCollectdSocket(socketFile);
