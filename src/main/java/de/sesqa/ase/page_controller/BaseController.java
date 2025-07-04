@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Controller
 public class BaseController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     @Value("${version:unknown}")
     private String version;
@@ -41,6 +41,8 @@ public class BaseController {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
         this.collectdClient = new CollectdClient();
+
+        logger.info("BaseController initialized:\nversion: {}\nbuildNumber: {}", version, buildNumber);
     }
 
     @GetMapping("/")
@@ -89,6 +91,8 @@ public class BaseController {
     @PostMapping("/api/chat/message")
     @ResponseBody
     public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
+        logger.info("Received chat message request:" +
+                "\nconversationId: {}\ncontent: {}", request.getConversationId(), request.getContent());
         try {
             Conversation conversation;
             if (request.getConversationId() != null) {
@@ -96,24 +100,27 @@ public class BaseController {
                         .orElseGet(this::createConversation);
             } else {
                 conversation = createConversation();
+                logger.info("Creating new conversation with id: {}", conversation.getId());
             }
 
             sendReceivedMetrics();
 
             Message userMsg = saveUserMessage(conversation, request.getContent());
             Message responseMessage = APIWrapper.query(userMsg);
+            logger.info("Received response from APIWrapper: '{}'", responseMessage.getContent());
 
             if (responseMessage.isEmpty()) {
-                LOGGER.info("Response message is empty");
+                logger.info("Response message is empty");
                 return new ChatMessageResponse("No response from the AI model.", conversation.getId());
             }
 
             Message botMessage = new Message(Message.MessageType.BOT, conversation, responseMessage.getContent());
             messageRepository.save(botMessage);
+            logger.info("Bot message saved for conversation with id {}", conversation.getId());
 
             return new ChatMessageResponse(botMessage.getContent(), conversation.getId());
         } catch (Exception e) {
-            LOGGER.error("Error processing message", e);
+            logger.error("Error processing message", e);
             Long conversationId = (request != null) ? request.getConversationId() : null;
             return new ChatMessageResponse("Error processing message: " + e.getMessage(), conversationId);
         }
@@ -122,7 +129,7 @@ public class BaseController {
     private Conversation createConversation() {
         Conversation conversation = new Conversation();
         conversationRepository.save(conversation);
-        LOGGER.info("New conversation started with ID: " + conversation.getId());
+        logger.info("New conversation started with ID: " + conversation.getId());
 
         return conversation;
     }
@@ -130,11 +137,13 @@ public class BaseController {
     private void sendReceivedMetrics() {
         long count = messageRepository.count();
         collectdClient.sendMetric("received", CollectdClient.CollectdType.GAUGE, count);
+        logger.info("Sending received metrics to Collectd: message count = {}", count);
     }
 
     private Message saveUserMessage(Conversation conversation, String message) {
         Message userMsg = new Message(Message.MessageType.USER, conversation, message);
         messageRepository.save(userMsg);
+        logger.info("User message saved...");
 
         return userMsg;
     }

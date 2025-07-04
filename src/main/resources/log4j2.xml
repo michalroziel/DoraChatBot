@@ -10,11 +10,11 @@
                 <ThresholdFilter level="${sys:consoleLogLevel}" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
         </Console>
-        <RollingFile name="File" fileName="logs/app.log" filePattern="logs/app-%d{MM-dd-yyyy}-%i.log.gz">
+        <RollingFile name="File" fileName="logs/latest.log" filePattern="logs/previousLogs/doraChatBot-%d{MM-dd-yyyy-HH-mm}-%i.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%logger{36}] %-5level (%t) - %msg%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="5KB"/>
+                <SizeBasedTriggeringPolicy size="10KB"/>
             </Policies>
             <DefaultRolloverStrategy max="2"/>
         </RollingFile>

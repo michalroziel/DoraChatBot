@@ -14,7 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class APIWrapper {
-    private static final Logger LOGGER = LoggerFactory.getLogger(APIWrapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(APIWrapper.class);
     private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -28,9 +28,9 @@ public class APIWrapper {
             responseBody = parseHttpResponse(response.body());
             
         }catch (IOException | InterruptedException e) {
-            LOGGER.error("Error during API request: " + e.getMessage());
+            logger.error("Error during API request: " + e.getMessage());
         }finally {
-            LOGGER.info("Query completed.\n");
+            logger.info("Query completed.\n");
         }
 
         return new Message(Message.MessageType.BOT, message.getConversation(), responseBody);

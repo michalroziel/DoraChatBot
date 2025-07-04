@@ -17,7 +17,7 @@ import java.util.Arrays;
 @SuppressFBWarnings(value = {"DMI_HARDCODED_ABSOLUTE_FILENAME"}, justification = "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
 public class CollectdClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CollectdClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(CollectdClient.class);
 
     private static final String COLLECTD_UNIXSOCK = "/var/run/collectd-unixsock";
 
@@ -41,7 +41,7 @@ public class CollectdClient {
             writeMetricToSocket(metric, os);
             readCollectdResponse(is);
         } catch (Exception e) {
-            LOGGER.error("Failed to send metric to collectd" + e.getMessage());
+            logger.error("Failed to send metric to collectd" + e.getMessage());
         }
     }
 
@@ -57,8 +57,8 @@ public class CollectdClient {
     }
 
     private void logMetric(String metric) {
-        LOGGER.info("Sending (Human): " + metric);
-        LOGGER.info("Sending (Bytes): " + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));
+        logger.info("Sending (Human): " + metric);
+        logger.info("Sending (Bytes): " + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));
     }
 
     private void writeMetricToSocket(String metric, OutputStream os) throws IOException {
@@ -74,7 +74,7 @@ public class CollectdClient {
 
         if (bytesRead != -1) {
             String response = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);
-            System.out.println("Collectd responded: " + response);
+            logger.info("Collectd responded: " + response);
         }
     }
 
