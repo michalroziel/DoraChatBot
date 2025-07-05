@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>APIWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.api</a> &gt; <span class="el_source">APIWrapper.java</span></div><h1>APIWrapper.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.api;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.api</a> &gt; <span class="el_source">ApiWrapper.java</span></div><h1>ApiWrapper.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
  * A wrapper class for interacting with an external chat completion API (e.g., OpenAI). This class
  * provides a static method to send a user's message to the API and get a response.
  */
-<span class="nc" id="L19">public class APIWrapper {</span>
-<span class="nc" id="L20">  private static final Logger logger = LoggerFactory.getLogger(APIWrapper.class);</span>
+<span class="nc" id="L19">public class ApiWrapper {</span>
+<span class="nc" id="L20">  private static final Logger logger = LoggerFactory.getLogger(ApiWrapper.class);</span>
 
   /** Loads environment variables from a .env file. Used to retrieve the API key. */
 <span class="nc" id="L23">  private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();</span>
@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 <span class="nc" id="L46">      responseBody = parseHttpResponse(response.body());</span>
 
 <span class="nc" id="L48">    } catch (IOException | InterruptedException e) {</span>
-<span class="nc" id="L49">      logger.error(&quot;Error during API request: &quot; + e.getMessage());</span>
+<span class="nc" id="L49">      logger.error(&quot;Error during API request: {}&quot;, e.getMessage());</span>
     } finally {
 <span class="nc" id="L51">      logger.info(&quot;Query completed.\n&quot;);</span>
     }
@@ -60,22 +60,25 @@ import org.slf4j.LoggerFactory;
    * @param messageContent The text content of the user's message.
    * @return An {@link HttpRequest} object configured for the API call.
    */
+  // CHECKSTYLE:OFF: LineLength
+  @SuppressWarnings(&quot;checkstyle:LineLength&quot;)
   private static HttpRequest buildHttpRequest(String messageContent) {
-<span class="nc" id="L64">    String body =</span>
-<span class="nc" id="L65">        String.format(</span>
+<span class="nc" id="L66">    String body =</span>
+<span class="nc" id="L67">        String.format(</span>
             &quot;{\&quot;model\&quot;: \&quot;gpt-4.1-nano\&quot;, \&quot;messages\&quot;: [{\&quot;role\&quot;: \&quot;user\&quot;, \&quot;content\&quot;: \&quot;%s\&quot;}]}&quot;,
             messageContent);
-<span class="nc" id="L68">    String apiURL = &quot;https://api.openai.com/v1/chat/completions&quot;;</span>
-<span class="nc" id="L69">    String apiKey = DOTENV.get(&quot;API_KEY&quot;);</span>
+<span class="nc" id="L70">    String apiUrl = &quot;https://api.openai.com/v1/chat/completions&quot;;</span>
+<span class="nc" id="L71">    String apiKey = DOTENV.get(&quot;API_KEY&quot;);</span>
 
-<span class="nc" id="L71">    return HttpRequest.newBuilder()</span>
-<span class="nc" id="L72">        .uri(URI.create(apiURL))</span>
-<span class="nc" id="L73">        .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
-<span class="nc" id="L74">        .header(&quot;Authorization&quot;, &quot;Bearer &quot; + apiKey)</span>
-<span class="nc" id="L75">        .POST(HttpRequest.BodyPublishers.ofString(body))</span>
-<span class="nc" id="L76">        .build();</span>
+<span class="nc" id="L73">    return HttpRequest.newBuilder()</span>
+<span class="nc" id="L74">        .uri(URI.create(apiUrl))</span>
+<span class="nc" id="L75">        .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L76">        .header(&quot;Authorization&quot;, &quot;Bearer &quot; + apiKey)</span>
+<span class="nc" id="L77">        .POST(HttpRequest.BodyPublishers.ofString(body))</span>
+<span class="nc" id="L78">        .build();</span>
   }
 
+  // CHECKSTYLE:ON: LineLength
   /**
    * Parses the JSON response body from the API to extract the message content.
    *
@@ -85,8 +88,8 @@ import org.slf4j.LoggerFactory;
    */
   private static String parseHttpResponse(String responseBody) throws IOException {
     // Parse response body to extract content inside message
-<span class="nc" id="L88">    JsonNode rootNode = OBJECT_MAPPER.readTree(responseBody);</span>
-<span class="nc" id="L89">    return rootNode.path(&quot;choices&quot;).get(0).path(&quot;message&quot;).path(&quot;content&quot;).asText();</span>
+<span class="nc" id="L91">    JsonNode rootNode = OBJECT_MAPPER.readTree(responseBody);</span>
+<span class="nc" id="L92">    return rootNode.path(&quot;choices&quot;).get(0).path(&quot;message&quot;).path(&quot;content&quot;).asText();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-DoraChatBot,de.sesqa.ase.api,APIWrapper,96,0,0,0,26,0,5,0,5,0
+DoraChatBot,de.sesqa.ase.api,ApiWrapper,96,0,0,0,26,0,5,0,5,0
 DoraChatBot,de.sesqa.ase.dto,ConversationSummaryResponse,23,0,0,0,10,0,5,0,5,0
 DoraChatBot,de.sesqa.ase.dto,ChatMessageResponse,23,0,0,0,10,0,5,0,5,0
 DoraChatBot,de.sesqa.ase.dto,MessageResponse,23,0,0,0,10,0,5,0,5,0

@@ -7,8 +7,17 @@ import de.sesqa.ase.dto.MessageResponse;
 import de.sesqa.ase.services.ConversationService;
 import de.sesqa.ase.services.MessageService;
 import java.util.List;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for handling chat-related endpoints. Provides APIs for sending messages,
+ * retrieving chat history, and fetching conversation details.
+ */
 @RestController
 @RequestMapping(&quot;/api/chat&quot;)
 public class ChatController {
@@ -16,24 +25,47 @@ public class ChatController {
   private final MessageService messageService;
   private final ConversationService conversationService;
 
-<span class="nc" id="L19">  public ChatController(MessageService messageService, ConversationService conversationService) {</span>
-<span class="nc" id="L20">    this.messageService = messageService;</span>
-<span class="nc" id="L21">    this.conversationService = conversationService;</span>
-<span class="nc" id="L22">  }</span>
+  /**
+   * Constructs a new ChatController with required services.
+   *
+   * @param messageService the service for handling messages
+   * @param conversationService the service for handling conversations
+   */
+<span class="nc" id="L34">  public ChatController(MessageService messageService, ConversationService conversationService) {</span>
+<span class="nc" id="L35">    this.messageService = messageService;</span>
+<span class="nc" id="L36">    this.conversationService = conversationService;</span>
+<span class="nc" id="L37">  }</span>
 
+  /**
+   * Handles incoming chat messages.
+   *
+   * @param request the chat message request payload
+   * @return the response containing the processed message
+   */
   @PostMapping(&quot;/message&quot;)
   public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
-<span class="nc" id="L26">    return messageService.handleMessage(request);</span>
+<span class="nc" id="L47">    return messageService.handleMessage(request);</span>
   }
 
+  /**
+   * Retrieves a summary of all chat conversations.
+   *
+   * @return a list of conversation summary responses
+   */
   @GetMapping(&quot;/history&quot;)
   public List&lt;ConversationSummaryResponse&gt; getHistory() {
-<span class="nc" id="L31">    return conversationService.getHistory();</span>
+<span class="nc" id="L57">    return conversationService.getHistory();</span>
   }
 
+  /**
+   * Retrieves all messages for a specific conversation.
+   *
+   * @param id the ID of the conversation
+   * @return a list of message responses for the conversation
+   */
   @GetMapping(&quot;/conversation/{id}&quot;)
   public List&lt;MessageResponse&gt; getConversation(@PathVariable Long id) {
-<span class="nc" id="L36">    return conversationService.getConversationMessages(id);</span>
+<span class="nc" id="L68">    return conversationService.getConversationMessages(id);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
