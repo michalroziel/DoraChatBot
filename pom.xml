@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>6.1.6</version>
+            <version>7.0.0-M6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -235,7 +235,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.3</version>
                 <configuration>
-                    <argLine>
+                    <argLine>${jacoco.agent.argLine}
                         -javaagent:"${settings.localRepository}/org/mockito/mockito-core/5.18.0/mockito-core-5.18.0.jar"
                     </argLine>
                     <statelessTestsetReporter
@@ -279,7 +279,17 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>report-site</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
                 </executions>
+                <configuration>
+                    <propertyName>jacoco.agent.argLine</propertyName>
+                </configuration>
             </plugin>
         </plugins>
     </build>
