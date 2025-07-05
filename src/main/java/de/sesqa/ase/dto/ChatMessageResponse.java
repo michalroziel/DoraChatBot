@@ -1,58 +1,60 @@
 package de.sesqa.ase.dto;
 
 /**
- * Represents the response object for a chat message.
- * This DTO is used to send chat message data back to the client.
+ * Represents the response object for a chat message. This DTO is used to send chat message data
+ * back to the client.
  */
 public class ChatMessageResponse {
-    /**
-     * The text content of the chat message.
-     */
-    private String content;
-    /**
-     * The unique identifier of the conversation to which the message belongs.
-     */
-    private Long conversationId;
+  /** The text content of the chat message. */
+  private String content;
 
-    /**
-     * Constructs a new ChatMessageResponse with the specified content and conversation ID.
-     * @param content The content of the message.
-     * @param conversationId The ID of the conversation.
-     */
-    public ChatMessageResponse(String content, Long conversationId) {
-        this.content = content;
-        this.conversationId = conversationId;
-    }
+  /** The unique identifier of the conversation to which the message belongs. */
+  private Long conversationId;
 
-    /**
-     * Gets the content of the chat message.
-     * @return The message content.
-     */
-    public String getContent() {
-        return content;
-    }
+  /**
+   * Constructs a new ChatMessageResponse with the specified content and conversation ID.
+   *
+   * @param content The content of the message.
+   * @param conversationId The ID of the conversation.
+   */
+  public ChatMessageResponse(String content, Long conversationId) {
+    this.content = content;
+    this.conversationId = conversationId;
+  }
 
-    /**
-     * Sets the content of the chat message.
-     * @param content The message content to set.
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
+  /**
+   * Gets the content of the chat message.
+   *
+   * @return The message content.
+   */
+  public String getContent() {
+    return content;
+  }
 
-    /**
-     * Gets the ID of the conversation.
-     * @return The conversation ID.
-     */
-    public Long getConversationId() {
-        return conversationId;
-    }
+  /**
+   * Sets the content of the chat message.
+   *
+   * @param content The message content to set.
+   */
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    /**
-     * Sets the ID of the conversation.
-     * @param conversationId The conversation ID to set.
-     */
-    public void setConversationId(Long conversationId) {
-        this.conversationId = conversationId;
-    }
+  /**
+   * Gets the ID of the conversation.
+   *
+   * @return The conversation ID.
+   */
+  public Long getConversationId() {
+    return conversationId;
+  }
+
+  /**
+   * Sets the ID of the conversation.
+   *
+   * @param conversationId The conversation ID to set.
+   */
+  public void setConversationId(Long conversationId) {
+    this.conversationId = conversationId;
+  }
 }
