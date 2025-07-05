@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IndexController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.controller</a> &gt; <span class="el_source">IndexController.java</span></div><h1>IndexController.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * Main controller for handling web requests.
+ * This includes serving the main page, handling chat history, and processing chat messages.
+ */
+@Controller
+public class IndexController {
+<span class="nc" id="L16">    private static final Logger logger = LoggerFactory.getLogger(IndexController.class);</span>
+
+    /**
+     * The application version, injected from application properties.
+     */
+    @Value(&quot;${version:unknown}&quot;)
+    private String version;
+
+    /**
+     * The build hash, injected from application properties.
+     */
+    @Value(&quot;${buildHash:unknown}&quot;)
+    private String buildNumber;
+
+    /**
+     * Constructs the BaseController with necessary repositories.
+     */
+<span class="nc" id="L33">    public IndexController() {</span>
+<span class="nc" id="L34">        logger.info(&quot;BaseController initialized:\nversion: {}\nbuildNumber: {}&quot;, version, buildNumber);</span>
+<span class="nc" id="L35">    }</span>
+
+    /**
+     * Serves the main index page.
+     *
+     * @param model The Spring UI model to add attributes to.
+     * @return The name of the view template to render (&quot;index&quot;).
+     */
+    @GetMapping(&quot;/&quot;)
+    public String index(Model model) {
+<span class="nc" id="L45">        model.addAttribute(&quot;version&quot;, version);</span>
+<span class="nc" id="L46">        model.addAttribute(&quot;buildNumber&quot;, buildNumber);</span>
+
+<span class="nc" id="L48">        return &quot;index&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

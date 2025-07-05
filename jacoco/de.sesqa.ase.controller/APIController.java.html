@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>APIController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.controller</a> &gt; <span class="el_source">APIController.java</span></div><h1>APIController.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.controller;
+
+import de.sesqa.ase.api.APIWrapper;
+import de.sesqa.ase.dto.ChatMessageRequest;
+import de.sesqa.ase.dto.ChatMessageResponse;
+import de.sesqa.ase.dto.ConversationSummaryResponse;
+import de.sesqa.ase.dto.MessageResponse;
+import de.sesqa.ase.entities.Conversation;
+import de.sesqa.ase.entities.Message;
+import de.sesqa.ase.metrics.CollectdClient;
+import de.sesqa.ase.repositories.ConversationRepository;
+import de.sesqa.ase.repositories.MessageRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Controller
+public class APIController {
+
+<span class="nc" id="L24">    private static final Logger logger = LoggerFactory.getLogger(APIController.class);</span>
+
+
+    private final MessageRepository messageRepository;
+    private final ConversationRepository conversationRepository;
+    private final CollectdClient collectdClient;
+
+<span class="nc" id="L31">    public APIController(MessageRepository messageRepository, ConversationRepository conversationRepository) {</span>
+<span class="nc" id="L32">        this.messageRepository = messageRepository;</span>
+<span class="nc" id="L33">        this.conversationRepository = conversationRepository;</span>
+<span class="nc" id="L34">        this.collectdClient = new CollectdClient();</span>
+<span class="nc" id="L35">    }</span>
+
+
+    /**
+     * API endpoint to retrieve a summary of all chat conversations.
+     *
+     * @return A list of {@link ConversationSummaryResponse} objects.
+     */
+    @GetMapping(&quot;/api/chat/history&quot;)
+    @ResponseBody
+    public List&lt;ConversationSummaryResponse&gt; getHistory() {
+<span class="nc" id="L46">        return conversationRepository.findAll().stream()</span>
+<span class="nc" id="L47">                .map(conversation -&gt; {</span>
+<span class="nc" id="L48">                    String title = conversation.getMessages().stream()</span>
+<span class="nc" id="L49">                            .findFirst()</span>
+<span class="nc" id="L50">                            .map(Message::getContent)</span>
+<span class="nc" id="L51">                            .orElse(&quot;Conversation &quot; + conversation.getId());</span>
+
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                    if (title.length() &gt; 35) {</span>
+<span class="nc" id="L54">                        title = title.substring(0, 30) + &quot;...&quot;;</span>
+                    }
+
+<span class="nc" id="L57">                    return new ConversationSummaryResponse(conversation.getId(), title);</span>
+                })
+<span class="nc" id="L59">                .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * API endpoint to retrieve all messages for a specific conversation.
+     *
+     * @param id The ID of the conversation.
+     * @return A list of {@link MessageResponse} objects for the given conversation, or an empty list if not found.
+     */
+    @GetMapping(&quot;/api/chat/conversation/{id}&quot;)
+    @ResponseBody
+    public List&lt;MessageResponse&gt; getConversationMessages(@PathVariable Long id) {
+<span class="nc" id="L71">        return conversationRepository.findById(id)</span>
+<span class="nc" id="L72">                .map(conversation -&gt; conversation.getMessages().stream()</span>
+<span class="nc" id="L73">                        .map(message -&gt; new MessageResponse(message.getContent(), message.getMessageType().name()))</span>
+<span class="nc" id="L74">                        .collect(Collectors.toList()))</span>
+<span class="nc" id="L75">                .orElse(List.of()); // Return an empty list if conversation not found</span>
+    }
+
+    /**
+     * Handles incoming chat messages from the user.
+     * It finds or creates a conversation, saves the user message, queries an external API for a response,
+     * saves the bot's response, and returns it to the client.
+     *
+     * @param request The chat message request from the client.
+     * @return A {@link ChatMessageResponse} containing the bot's reply and the conversation ID.
+     */
+    @PostMapping(&quot;/api/chat/message&quot;)
+    @ResponseBody
+    public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (request == null) {</span>
+<span class="nc" id="L90">            logger.error(&quot;Received null ChatMessageRequest&quot;);</span>
+<span class="nc" id="L91">            return new ChatMessageResponse(&quot;Request cannot be null.&quot;, null);</span>
+        }
+<span class="nc" id="L93">        logger.info(&quot;&quot;&quot;</span>
+                Received chat message request:\
+                
+                conversationId: {}
+<span class="nc" id="L97">                content: {}&quot;&quot;&quot;, request.getConversationId(), request.getContent());</span>
+        try {
+            Conversation conversation;
+<span class="nc bnc" id="L100" title="All 2 branches missed.">            if (request.getConversationId() != null) {</span>
+<span class="nc" id="L101">                conversation = conversationRepository.findById(request.getConversationId())</span>
+<span class="nc" id="L102">                        .orElseGet(this::createConversation);</span>
+            } else {
+<span class="nc" id="L104">                conversation = createConversation();</span>
+<span class="nc" id="L105">                logger.info(&quot;Creating new conversation with id: {}&quot;, conversation.getId());</span>
+            }
+
+<span class="nc" id="L108">            sendReceivedMetrics();</span>
+
+<span class="nc" id="L110">            Message userMsg = saveUserMessage(conversation, request.getContent());</span>
+<span class="nc" id="L111">            Message responseMessage = APIWrapper.query(userMsg);</span>
+<span class="nc" id="L112">            logger.info(&quot;Received response from APIWrapper: '{}'&quot;, responseMessage.getContent());</span>
+
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (responseMessage.isEmpty()) {</span>
+<span class="nc" id="L115">                logger.info(&quot;Response message is empty&quot;);</span>
+<span class="nc" id="L116">                return new ChatMessageResponse(&quot;No response from the AI model.&quot;, conversation.getId());</span>
+            }
+
+<span class="nc" id="L119">            Message botMessage = new Message(Message.MessageType.BOT, conversation, responseMessage.getContent());</span>
+<span class="nc" id="L120">            messageRepository.save(botMessage);</span>
+<span class="nc" id="L121">            logger.info(&quot;Bot message saved for conversation with id {}&quot;, conversation.getId());</span>
+
+<span class="nc" id="L123">            return new ChatMessageResponse(botMessage.getContent(), conversation.getId());</span>
+<span class="nc" id="L124">        } catch (Exception e) {</span>
+<span class="nc" id="L125">            logger.error(&quot;Error processing message&quot;, e);</span>
+<span class="nc" id="L126">            Long conversationId = request.getConversationId();</span>
+<span class="nc" id="L127">            return new ChatMessageResponse(&quot;Error processing message: &quot; + e.getMessage(), conversationId);</span>
+        }
+    }
+
+
+    /**
+     * Creates and persists a new Conversation entity.
+     *
+     * @return The newly created {@link Conversation}.
+     */
+    private Conversation createConversation() {
+<span class="nc" id="L138">        Conversation conversation = new Conversation();</span>
+<span class="nc" id="L139">        conversationRepository.save(conversation);</span>
+<span class="nc" id="L140">        logger.info(&quot;New conversation started with ID: {}&quot;, conversation.getId());</span>
+
+<span class="nc" id="L142">        return conversation;</span>
+    }
+
+    /**
+     * Sends metrics about received messages to Collectd.
+     */
+    private void sendReceivedMetrics() {
+<span class="nc" id="L149">        long count = messageRepository.count();</span>
+<span class="nc" id="L150">        collectdClient.sendMetric(&quot;received&quot;, CollectdClient.CollectdType.GAUGE, count);</span>
+<span class="nc" id="L151">        logger.info(&quot;Sending received metrics to Collectd: message count = {}&quot;, count);</span>
+<span class="nc" id="L152">    }</span>
+
+    /**
+     * Creates and saves a user message to the database.
+     *
+     * @param conversation The conversation the message belongs to.
+     * @param message      The content of the user's message.
+     * @return The saved {@link Message} entity.
+     */
+    private Message saveUserMessage(Conversation conversation, String message) {
+<span class="nc" id="L162">        Message userMsg = new Message(Message.MessageType.USER, conversation, message);</span>
+<span class="nc" id="L163">        messageRepository.save(userMsg);</span>
+<span class="nc" id="L164">        logger.info(&quot;User message saved...&quot;);</span>
+
+<span class="nc" id="L166">        return userMsg;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>APIWrapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.api</a> &gt; <span class="el_source">APIWrapper.java</span></div><h1>APIWrapper.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.api;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sesqa.ase.entities.Message;
+import io.github.cdimascio.dotenv.Dotenv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+/**
+ * A wrapper class for interacting with an external chat completion API (e.g., OpenAI).
+ * This class provides a static method to send a user's message to the API and get a response.
+ */
+<span class="nc" id="L20">public class APIWrapper {</span>
+<span class="nc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(APIWrapper.class);</span>
+    /**
+     * Loads environment variables from a .env file. Used to retrieve the API key.
+     */
+<span class="nc" id="L25">    private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();</span>
+    /**
+     * A reusable HttpClient instance for making HTTP requests.
+     */
+<span class="nc" id="L29">    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();</span>
+    /**
+     * A reusable ObjectMapper for parsing JSON responses.
+     */
+<span class="nc" id="L33">    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();</span>
+
+    /**
+     * Sends a user's message to the chat API and returns the API's response as a new Message.
+     *
+     * @param message The user's message to be sent to the API.
+     * @return A new {@link Message} of type {@code BOT} containing the API's response.
+     * @throws IOException          if an I/O error occurs when sending or receiving.
+     * @throws InterruptedException if the operation is interrupted.
+     */
+    public static Message query(Message message) throws IOException, InterruptedException {
+<span class="nc" id="L44">        HttpRequest request = buildHttpRequest(message.getContent());</span>
+<span class="nc" id="L45">        String responseBody = &quot;&quot;;</span>
+
+        try {
+<span class="nc" id="L48">            HttpResponse&lt;String&gt; response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());</span>
+<span class="nc" id="L49">            responseBody = parseHttpResponse(response.body());</span>
+
+<span class="nc" id="L51">        }catch (IOException | InterruptedException e) {</span>
+<span class="nc" id="L52">            logger.error(&quot;Error during API request: &quot; + e.getMessage());</span>
+        }finally {
+<span class="nc" id="L54">            logger.info(&quot;Query completed.\n&quot;);</span>
+        }
+
+<span class="nc" id="L57">        return new Message(Message.MessageType.BOT, message.getConversation(), responseBody);</span>
+    }
+
+    /**
+     * Builds an HTTP POST request for the chat completion API.
+     *
+     * @param messageContent The text content of the user's message.
+     * @return An {@link HttpRequest} object configured for the API call.
+     */
+    private static HttpRequest buildHttpRequest(String messageContent) {
+<span class="nc" id="L67">        String body = String.format(&quot;{\&quot;model\&quot;: \&quot;gpt-4.1-nano\&quot;, \&quot;messages\&quot;: [{\&quot;role\&quot;: \&quot;user\&quot;, \&quot;content\&quot;: \&quot;%s\&quot;}]}&quot;, messageContent);</span>
+<span class="nc" id="L68">        String apiURL = &quot;https://api.openai.com/v1/chat/completions&quot;;</span>
+<span class="nc" id="L69">        String apiKey = DOTENV.get(&quot;API_KEY&quot;);</span>
+
+<span class="nc" id="L71">        return HttpRequest.newBuilder()</span>
+<span class="nc" id="L72">                .uri(URI.create(apiURL))</span>
+<span class="nc" id="L73">                .header(&quot;Content-Type&quot;, &quot;application/json&quot;)</span>
+<span class="nc" id="L74">                .header(&quot;Authorization&quot;, &quot;Bearer &quot; + apiKey)</span>
+<span class="nc" id="L75">                .POST(HttpRequest.BodyPublishers.ofString(body))</span>
+<span class="nc" id="L76">                .build();</span>
+    }
+
+    /**
+     * Parses the JSON response body from the API to extract the message content.
+     *
+     * @param responseBody The JSON string received from the API.
+     * @return The extracted message content as a String.
+     * @throws IOException if there is a problem parsing the JSON.
+     */
+    private static String parseHttpResponse(String responseBody) throws IOException {
+        // Parse response body to extract content inside message
+<span class="nc" id="L88">        JsonNode rootNode = OBJECT_MAPPER.readTree(responseBody);</span>
+<span class="nc" id="L89">        return rootNode.path(&quot;choices&quot;).get(0).path(&quot;message&quot;).path(&quot;content&quot;).asText();</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
