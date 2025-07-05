@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChatController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.controller</a> &gt; <span class="el_source">ChatController.java</span></div><h1>ChatController.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.controller;
+
+import de.sesqa.ase.dto.ChatMessageRequest;
+import de.sesqa.ase.dto.ChatMessageResponse;
+import de.sesqa.ase.dto.ConversationSummaryResponse;
+import de.sesqa.ase.dto.MessageResponse;
+import de.sesqa.ase.services.ConversationService;
+import de.sesqa.ase.services.MessageService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/chat&quot;)
+public class ChatController {
+
+    private final MessageService messageService;
+    private final ConversationService conversationService;
+
+<span class="nc" id="L20">    public ChatController(MessageService messageService, ConversationService conversationService) {</span>
+<span class="nc" id="L21">        this.messageService = messageService;</span>
+<span class="nc" id="L22">        this.conversationService = conversationService;</span>
+<span class="nc" id="L23">    }</span>
+
+    @PostMapping(&quot;/message&quot;)
+    public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
+<span class="nc" id="L27">        return messageService.handleMessage(request);</span>
+    }
+
+    @GetMapping(&quot;/history&quot;)
+    public List&lt;ConversationSummaryResponse&gt; getHistory() {
+<span class="nc" id="L32">        return conversationService.getHistory();</span>
+    }
+
+    @GetMapping(&quot;/conversation/{id}&quot;)
+    public List&lt;MessageResponse&gt; getConversation(@PathVariable Long id) {
+<span class="nc" id="L37">        return conversationService.getConversationMessages(id);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

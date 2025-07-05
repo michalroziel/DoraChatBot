@@ -5,12 +5,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = {
         &quot;de.sesqa.ase.controller&quot;,
         &quot;de.sesqa.ase.api&quot;,
-        &quot;de.sesqa.ase.repositories&quot;,   // &lt;-- Add this line
-        &quot;de.sesqa.ase.entities&quot;        // (optional, for completeness)
+        &quot;de.sesqa.ase.repositories&quot;,
+        &quot;de.sesqa.ase.entities&quot;,
+        &quot;de.sesqa.ase.services&quot;,
+
 })
-<span class="nc" id="L11">public class DoraChatBot {</span>
+<span class="nc" id="L13">public class DoraChatBot {</span>
     public static void main(final String[] args) {
-<span class="nc" id="L13">        SpringApplication.run(DoraChatBot.class, args);</span>
-<span class="nc" id="L14">    }</span>
+<span class="nc" id="L15">        SpringApplication.run(DoraChatBot.class, args);</span>
+<span class="nc" id="L16">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
