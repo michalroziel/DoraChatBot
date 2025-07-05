@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
  * A wrapper class for interacting with an external chat completion API (e.g., OpenAI). This class
  * provides a static method to send a user's message to the API and get a response.
  */
-public class APIWrapper {
-  private static final Logger logger = LoggerFactory.getLogger(APIWrapper.class);
+public class ApiWrapper {
+  private static final Logger logger = LoggerFactory.getLogger(ApiWrapper.class);
 
   /** Loads environment variables from a .env file. Used to retrieve the API key. */
   private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();
@@ -46,7 +46,7 @@ public class APIWrapper {
       responseBody = parseHttpResponse(response.body());
 
     } catch (IOException | InterruptedException e) {
-      logger.error("Error during API request: " + e.getMessage());
+      logger.error("Error during API request: {}", e.getMessage());
     } finally {
       logger.info("Query completed.\n");
     }
@@ -60,22 +60,25 @@ public class APIWrapper {
    * @param messageContent The text content of the user's message.
    * @return An {@link HttpRequest} object configured for the API call.
    */
+  // CHECKSTYLE:OFF: LineLength
+  @SuppressWarnings("checkstyle:LineLength")
   private static HttpRequest buildHttpRequest(String messageContent) {
     String body =
         String.format(
             "{\"model\": \"gpt-4.1-nano\", \"messages\": [{\"role\": \"user\", \"content\": \"%s\"}]}",
             messageContent);
-    String apiURL = "https://api.openai.com/v1/chat/completions";
+    String apiUrl = "https://api.openai.com/v1/chat/completions";
     String apiKey = DOTENV.get("API_KEY");
 
     return HttpRequest.newBuilder()
-        .uri(URI.create(apiURL))
+        .uri(URI.create(apiUrl))
         .header("Content-Type", "application/json")
         .header("Authorization", "Bearer " + apiKey)
         .POST(HttpRequest.BodyPublishers.ofString(body))
         .build();
   }
 
+  // CHECKSTYLE:ON: LineLength
   /**
    * Parses the JSON response body from the API to extract the message content.
    *

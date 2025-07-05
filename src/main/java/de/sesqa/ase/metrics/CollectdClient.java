@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
 @SuppressFBWarnings(
     value = {"DMI_HARDCODED_ABSOLUTE_FILENAME"},
     justification =
-        "Socket path is intentionally hardcoded for collectd integration; read result is not needed")
+        "Socket path is intentionally hardcoded"
+            + " for collectd integration; read result is not needed")
 public class CollectdClient {
 
   private static final Logger logger = LoggerFactory.getLogger(CollectdClient.class);

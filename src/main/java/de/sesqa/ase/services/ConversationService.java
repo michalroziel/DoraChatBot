@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Service class for managing chat conversations and their messages.
+ *
+ * <p>Provides methods to retrieve conversation summaries and messages for a specific conversation.
+ */
 @Service
 public class ConversationService {
 
@@ -24,9 +29,10 @@ public class ConversationService {
   }
 
   /**
-   * API endpoint to retrieve a summary of all chat conversations.
+   * Retrieves a summary of all chat conversations.
    *
-   * @return A list of {@link ConversationSummaryResponse} objects.
+   * @return A list of {@link ConversationSummaryResponse} objects, each containing the ID and a
+   *     title (first message content or a default title) for a conversation.
    */
   public List<ConversationSummaryResponse> getHistory() {
     return conversationRepository.findAll().stream()
@@ -48,11 +54,11 @@ public class ConversationService {
   }
 
   /**
-   * API endpoint to retrieve all messages for a specific conversation.
+   * Retrieves all messages for a specific conversation.
    *
    * @param id The ID of the conversation.
    * @return A list of {@link MessageResponse} objects for the given conversation, or an empty list
-   *     if not found.
+   *     if the conversation is not found.
    */
   public List<MessageResponse> getConversationMessages(@PathVariable Long id) {
     return conversationRepository

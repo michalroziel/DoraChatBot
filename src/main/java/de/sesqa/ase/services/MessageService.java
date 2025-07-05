@@ -1,6 +1,6 @@
 package de.sesqa.ase.services;
 
-import de.sesqa.ase.api.APIWrapper;
+import de.sesqa.ase.api.ApiWrapper;
 import de.sesqa.ase.dto.ChatMessageRequest;
 import de.sesqa.ase.dto.ChatMessageResponse;
 import de.sesqa.ase.entities.Conversation;
@@ -14,13 +14,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Service class responsible for handling chat messages, managing conversations, persisting
+ * messages, and interacting with external APIs and metrics systems.
+ */
 @Service
 public class MessageService {
 
+  /** Logger instance for logging events and errors. */
   private static final Logger logger = LoggerFactory.getLogger(MessageService.class);
 
+  /** Repository for accessing and managing Message entities. */
   private final MessageRepository messageRepository;
+
+  /** Repository for accessing and managing Conversation entities. */
   private final ConversationRepository conversationRepository;
+
+  /** Client for sending metrics to Collectd. */
   private final CollectdClient collectdClient;
 
   /**
@@ -54,10 +64,10 @@ public class MessageService {
     }
     logger.info(
         """
-            Received chat message request:\
+                Received chat message request:\
 
-            conversationId: {}
-            content: {}""",
+                conversationId: {}
+                content: {}""",
         request.getConversationId(),
         request.getContent());
 
@@ -77,7 +87,10 @@ public class MessageService {
    * Processes a full chat interaction consisting of a user message and the generated bot response.
    *
    * @param conversation A conversation between the user and the bot.
-   * @return {@link ChatMessageResponse}
+   * @param request The chat message request from the client.
+   * @return {@link ChatMessageResponse} containing the bot's reply and the conversation ID.
+   * @throws InterruptedException if the thread is interrupted during processing.
+   * @throws IOException if an I/O error occurs during API interaction.
    */
   private ChatMessageResponse processChatInteraction(
       Conversation conversation, ChatMessageRequest request)
@@ -85,7 +98,7 @@ public class MessageService {
     sendReceivedMetrics();
 
     Message userMsg = saveUserMessage(conversation, request.getContent());
-    Message responseMessage = APIWrapper.query(userMsg);
+    Message responseMessage = ApiWrapper.query(userMsg);
     logger.info("Received response from APIWrapper: '{}'", responseMessage.getContent());
 
     if (responseMessage.isEmpty()) {
