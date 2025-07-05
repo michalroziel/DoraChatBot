@@ -1,66 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Conversation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.entities</a> &gt; <span class="el_source">Conversation.java</span></div><h1>Conversation.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.entities;
 
 import jakarta.persistence.*;
-
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Represents a conversation entity. A conversation consists of a sequence of messages.
- */
+/** Represents a conversation entity. A conversation consists of a sequence of messages. */
 @Entity
 public class Conversation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    /**
-     * The list of messages associated with this conversation.
-     * This is a one-to-many relationship, where the 'conversation' field in the Message entity owns the relationship.
-     * Operations on the conversation (like persist, remove) are cascaded to its messages.
-     * Orphaned messages are automatically removed.
-     */
-    @OneToMany(mappedBy = &quot;conversation&quot;, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List&lt;Message&gt; messages;
+  /**
+   * The list of messages associated with this conversation. This is a one-to-many relationship,
+   * where the 'conversation' field in the Message entity owns the relationship. Operations on the
+   * conversation (like persist, remove) are cascaded to its messages. Orphaned messages are
+   * automatically removed.
+   */
+  @OneToMany(mappedBy = &quot;conversation&quot;, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List&lt;Message&gt; messages;
 
+  /** Default constructor. Required by JPA. */
+<span class="nc" id="L24">  public Conversation() {}</span>
 
-    /**
-     * Default constructor. Required by JPA.
-     */
-<span class="nc" id="L30">    public Conversation() {</span>
-<span class="nc" id="L31">    }</span>
+  /**
+   * Constructs a new Conversation with a given ID.
+   *
+   * @param id The identifier for the new conversation.
+   */
+<span class="nc" id="L31">  public Conversation(long id) {</span>
+<span class="nc" id="L32">    this.id = id;</span>
+<span class="nc" id="L33">  }</span>
 
-    /**
-     * Constructs a new Conversation with a given ID.
-     * @param id The identifier for the new conversation.
-     */
-<span class="nc" id="L37">    public Conversation(long id) {</span>
-<span class="nc" id="L38">        this.id = id;</span>
-<span class="nc" id="L39">    }</span>
+  /**
+   * Returns an unmodifiable view of the messages in this conversation. If the message list is null,
+   * it returns an empty list.
+   *
+   * @return An unmodifiable list of messages.
+   */
+  public List&lt;Message&gt; getMessages() {
+<span class="nc bnc" id="L42" title="All 2 branches missed.">    return messages == null ? Collections.emptyList() : Collections.unmodifiableList(messages);</span>
+  }
 
-    /**
-     * Returns an unmodifiable view of the messages in this conversation.
-     * If the message list is null, it returns an empty list.
-     * @return An unmodifiable list of messages.
-     */
-    public List&lt;Message&gt; getMessages() {
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        return messages == null ? Collections.emptyList() : Collections.unmodifiableList(messages);</span>
-    }
+  /**
+   * Adds a message to the conversation's list of messages.
+   *
+   * @param message The message to be added.
+   */
+  public void addMessages(Message message) {
+<span class="nc" id="L51">    messages.add(message);</span>
+<span class="nc" id="L52">  }</span>
 
-    /**
-     * Adds a message to the conversation's list of messages.
-     * @param message The message to be added.
-     */
-    public void addMessages(Message message){
-<span class="nc" id="L55">        messages.add(message);</span>
-<span class="nc" id="L56">    }</span>
-
-    /**
-     * Gets the unique identifier for this conversation.
-     * @return The conversation's ID.
-     */
-    public long getId() {
-<span class="nc" id="L63">        return id;</span>
-    }
+  /**
+   * Gets the unique identifier for this conversation.
+   *
+   * @return The conversation's ID.
+   */
+  public long getId() {
+<span class="nc" id="L60">    return id;</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

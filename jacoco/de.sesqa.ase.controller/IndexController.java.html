@@ -8,44 +8,38 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Main controller for handling web requests.
- * This includes serving the main page, handling chat history, and processing chat messages.
+ * Main controller for handling web requests. This includes serving the main page, handling chat
+ * history, and processing chat messages.
  */
 @Controller
 public class IndexController {
-<span class="nc" id="L16">    private static final Logger logger = LoggerFactory.getLogger(IndexController.class);</span>
+<span class="nc" id="L16">  private static final Logger logger = LoggerFactory.getLogger(IndexController.class);</span>
 
-    /**
-     * The application version, injected from application properties.
-     */
-    @Value(&quot;${version:unknown}&quot;)
-    private String version;
+  /** The application version, injected from application properties. */
+  @Value(&quot;${version:unknown}&quot;)
+  private String version;
 
-    /**
-     * The build hash, injected from application properties.
-     */
-    @Value(&quot;${buildHash:unknown}&quot;)
-    private String buildNumber;
+  /** The build hash, injected from application properties. */
+  @Value(&quot;${buildHash:unknown}&quot;)
+  private String buildNumber;
 
-    /**
-     * Constructs the BaseController with necessary repositories.
-     */
-<span class="nc" id="L33">    public IndexController() {</span>
-<span class="nc" id="L34">        logger.info(&quot;BaseController initialized:\nversion: {}\nbuildNumber: {}&quot;, version, buildNumber);</span>
-<span class="nc" id="L35">    }</span>
+  /** Constructs the BaseController with necessary repositories. */
+<span class="nc" id="L27">  public IndexController() {</span>
+<span class="nc" id="L28">    logger.info(&quot;BaseController initialized:\nversion: {}\nbuildNumber: {}&quot;, version, buildNumber);</span>
+<span class="nc" id="L29">  }</span>
 
-    /**
-     * Serves the main index page.
-     *
-     * @param model The Spring UI model to add attributes to.
-     * @return The name of the view template to render (&quot;index&quot;).
-     */
-    @GetMapping(&quot;/&quot;)
-    public String index(Model model) {
-<span class="nc" id="L45">        model.addAttribute(&quot;version&quot;, version);</span>
-<span class="nc" id="L46">        model.addAttribute(&quot;buildNumber&quot;, buildNumber);</span>
+  /**
+   * Serves the main index page.
+   *
+   * @param model The Spring UI model to add attributes to.
+   * @return The name of the view template to render (&quot;index&quot;).
+   */
+  @GetMapping(&quot;/&quot;)
+  public String index(Model model) {
+<span class="nc" id="L39">    model.addAttribute(&quot;version&quot;, version);</span>
+<span class="nc" id="L40">    model.addAttribute(&quot;buildNumber&quot;, buildNumber);</span>
 
-<span class="nc" id="L48">        return &quot;index&quot;;</span>
-    }
+<span class="nc" id="L42">    return &quot;index&quot;;</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -1,162 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollectdClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.metrics</a> &gt; <span class="el_source">CollectdClient.java</span></div><h1>CollectdClient.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.metrics;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.newsclub.net.unix.AFUNIXSocket;
-import org.newsclub.net.unix.AFUNIXSocketAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-
+import org.newsclub.net.unix.AFUNIXSocket;
+import org.newsclub.net.unix.AFUNIXSocketAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * A client for sending metrics to a collectd daemon via a UNIX socket.
- * This class handles the connection, formatting, and sending of metric data
- * according to the collectd plain text protocol.
+ * A client for sending metrics to a collectd daemon via a UNIX socket. This class handles the
+ * connection, formatting, and sending of metric data according to the collectd plain text protocol.
  */
-@SuppressFBWarnings(value = {&quot;DMI_HARDCODED_ABSOLUTE_FILENAME&quot;}, justification = &quot;Socket path is intentionally hardcoded for collectd integration; read result is not needed&quot;)
+@SuppressFBWarnings(
+    value = {&quot;DMI_HARDCODED_ABSOLUTE_FILENAME&quot;},
+    justification =
+        &quot;Socket path is intentionally hardcoded for collectd integration; read result is not needed&quot;)
 <span class="nc" id="L23">public class CollectdClient {</span>
 
-<span class="nc" id="L25">    private static final Logger logger = LoggerFactory.getLogger(CollectdClient.class);</span>
+<span class="nc" id="L25">  private static final Logger logger = LoggerFactory.getLogger(CollectdClient.class);</span>
 
-    /**
-     * The hardcoded path to the collectd UNIX socket file.
-     */
-    private static final String COLLECTD_UNIXSOCK = &quot;/var/run/collectd-unixsock&quot;;
+  /** The hardcoded path to the collectd UNIX socket file. */
+  private static final String COLLECTD_UNIXSOCK = &quot;/var/run/collectd-unixsock&quot;;
 
-    /*
-        Auflösung von Collectd Variablen ähnlich zu Package namen:
-        plugin.typeinstance.type.value
-        Beispiel:
-        dorachatbot.messages.totalcount.[VALUE]
-     */
+  /*
+     Auflösung von Collectd Variablen ähnlich zu Package namen:
+     plugin.typeinstance.type.value
+     Beispiel:
+     dorachatbot.messages.totalcount.[VALUE]
+  */
 
-    /**
-     * Sends a metric to the collectd daemon.
-     * It establishes a connection, formats the metric, sends it, and reads the response.
-     *
-     * @param typeInstance The instance of the plugin/type (e.g., &quot;messages.totalcount&quot;).
-     * @param type         The type of the metric (e.g., GAUGE, COUNTER).
-     * @param value        The numeric value of the metric.
-     */
-    public void sendMetric(String typeInstance, CollectdType type, long value) {
-<span class="nc" id="L48">        File socketFile = new File(COLLECTD_UNIXSOCK);</span>
+  /**
+   * Sends a metric to the collectd daemon. It establishes a connection, formats the metric, sends
+   * it, and reads the response.
+   *
+   * @param typeInstance The instance of the plugin/type (e.g., &quot;messages.totalcount&quot;).
+   * @param type The type of the metric (e.g., GAUGE, COUNTER).
+   * @param value The numeric value of the metric.
+   */
+  public void sendMetric(String typeInstance, CollectdType type, long value) {
+<span class="nc" id="L46">    File socketFile = new File(COLLECTD_UNIXSOCK);</span>
 
-        try (
-<span class="nc" id="L51">                AFUNIXSocket socket = connectToCollectdSocket(socketFile);</span>
-<span class="nc" id="L52">                OutputStream os = socket.getOutputStream();</span>
-<span class="nc" id="L53">                InputStream is = socket.getInputStream();</span>
-        ) {
-<span class="nc" id="L55">            String metric = formatMetric(typeInstance, type, value);</span>
-<span class="nc" id="L56">            logMetric(metric);</span>
-<span class="nc" id="L57">            writeMetricToSocket(metric, os);</span>
-<span class="nc" id="L58">            readCollectdResponse(is);</span>
-<span class="nc" id="L59">        } catch (Exception e) {</span>
-<span class="nc" id="L60">            logger.error(&quot;Failed to send metric to collectd&quot; + e.getMessage());</span>
-<span class="nc" id="L61">        }</span>
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L48">    try (AFUNIXSocket socket = connectToCollectdSocket(socketFile);</span>
+<span class="nc" id="L49">        OutputStream os = socket.getOutputStream();</span>
+<span class="nc" id="L50">        InputStream is = socket.getInputStream(); ) {</span>
+<span class="nc" id="L51">      String metric = formatMetric(typeInstance, type, value);</span>
+<span class="nc" id="L52">      logMetric(metric);</span>
+<span class="nc" id="L53">      writeMetricToSocket(metric, os);</span>
+<span class="nc" id="L54">      readCollectdResponse(is);</span>
+<span class="nc" id="L55">    } catch (Exception e) {</span>
+<span class="nc" id="L56">      logger.error(&quot;Failed to send metric to collectd&quot; + e.getMessage());</span>
+<span class="nc" id="L57">    }</span>
+<span class="nc" id="L58">  }</span>
 
-    /**
-     * Connects to the collectd UNIX socket.
-     *
-     * @param socketFile The file representing the UNIX socket.
-     * @return An established AFUNIXSocket connection.
-     * @throws IOException if an I/O error occurs when creating or connecting the socket.
-     */
-    private AFUNIXSocket connectToCollectdSocket(File socketFile) throws IOException {
-<span class="nc" id="L72">        AFUNIXSocket socket = AFUNIXSocket.newInstance();</span>
-<span class="nc" id="L73">        socket.connect(new AFUNIXSocketAddress(socketFile));</span>
+  /**
+   * Connects to the collectd UNIX socket.
+   *
+   * @param socketFile The file representing the UNIX socket.
+   * @return An established AFUNIXSocket connection.
+   * @throws IOException if an I/O error occurs when creating or connecting the socket.
+   */
+  private AFUNIXSocket connectToCollectdSocket(File socketFile) throws IOException {
+<span class="nc" id="L68">    AFUNIXSocket socket = AFUNIXSocket.newInstance();</span>
+<span class="nc" id="L69">    socket.connect(new AFUNIXSocketAddress(socketFile));</span>
 
-<span class="nc" id="L75">        return socket;</span>
+<span class="nc" id="L71">    return socket;</span>
+  }
+
+  /**
+   * Formats the metric data into a string that collectd can understand via the PUTVAL command.
+   *
+   * @param typeInstance The specific instance for the metric.
+   * @param type The collectd type of the metric.
+   * @param value The value of the metric.
+   * @return A formatted string for the PUTVAL command.
+   */
+  private String formatMetric(String typeInstance, CollectdType type, long value) {
+<span class="nc" id="L83">    return String.format(</span>
+        &quot;PUTVAL \&quot;%s/%s/%s\&quot; interval=10 N:%d%n&quot;,
+<span class="nc" id="L85">        &quot;dorachatbot&quot;, typeInstance, type.getTypeName(), value);</span>
+  }
+
+  /**
+   * Logs the metric string in both human-readable and byte array format for debugging.
+   *
+   * @param metric The formatted metric string to log.
+   */
+  private void logMetric(String metric) {
+<span class="nc" id="L94">    logger.info(&quot;Sending (Human): &quot; + metric);</span>
+<span class="nc" id="L95">    logger.info(&quot;Sending (Bytes): &quot; + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));</span>
+<span class="nc" id="L96">  }</span>
+
+  /**
+   * Writes the formatted metric string to the provided OutputStream of the socket.
+   *
+   * @param metric The metric string to send.
+   * @param os The output stream of the connected socket.
+   * @throws IOException if an I/O error occurs when writing to the stream.
+   */
+  private void writeMetricToSocket(String metric, OutputStream os) throws IOException {
+<span class="nc" id="L106">    os.write(metric.getBytes(StandardCharsets.UTF_8));</span>
+<span class="nc" id="L107">    os.flush();</span>
+<span class="nc" id="L108">  }</span>
+
+  /**
+   * Reads the response from the collectd daemon from the socket's InputStream and logs it.
+   *
+   * @param is The input stream of the connected socket.
+   * @throws IOException if an I/O error occurs when reading from the stream.
+   */
+  private void readCollectdResponse(InputStream is) throws IOException {
+    // Lies die Antwort von collectd (optional: Buffer und Timeout setzen)
+<span class="nc" id="L118">    byte[] buffer = new byte[1024];</span>
+<span class="nc" id="L119">    int bytesRead = is.read(buffer); // blockiert bis collectd antwortet oder EOF</span>
+
+<span class="nc bnc" id="L121" title="All 2 branches missed.">    if (bytesRead != -1) {</span>
+<span class="nc" id="L122">      String response = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);</span>
+<span class="nc" id="L123">      logger.info(&quot;Collectd responded: &quot; + response);</span>
     }
+<span class="nc" id="L125">  }</span>
+
+  /** Represents the types of metrics that can be sent to collectd. */
+<span class="nc" id="L128">  public enum CollectdType {</span>
+    /** A gauge value is for storing values that can increase or decrease, like temperature. */
+<span class="nc" id="L130">    GAUGE(&quot;gauge&quot;),</span>
+    /**
+     * A counter is for values that only increase, like the number of requests. It will be reset on
+     * overflow.
+     */
+<span class="nc" id="L135">    COUNTER(&quot;counter&quot;),</span>
+    /**
+     * A derive value is stored as a rate of change. It's like a counter but for non-monotonic
+     * values.
+     */
+<span class="nc" id="L140">    DERIVE(&quot;derive&quot;),</span>
+    /** An absolute value is for counters that are reset upon reading. */
+<span class="nc" id="L142">    ABSOLUTE(&quot;absolute&quot;);</span>
+
+    private final String typeName;
 
     /**
-     * Formats the metric data into a string that collectd can understand via the PUTVAL command.
+     * Constructs a CollectdType enum constant.
      *
-     * @param typeInstance The specific instance for the metric.
-     * @param type         The collectd type of the metric.
-     * @param value        The value of the metric.
-     * @return A formatted string for the PUTVAL command.
+     * @param typeName The string representation of the type used by collectd.
      */
-    private String formatMetric(String typeInstance, CollectdType type, long value) {
-<span class="nc" id="L87">        return String.format(&quot;PUTVAL \&quot;%s/%s/%s\&quot; interval=10 N:%d%n&quot;, &quot;dorachatbot&quot;, typeInstance, type.getTypeName(), value);</span>
+<span class="nc" id="L151">    CollectdType(String typeName) {</span>
+<span class="nc" id="L152">      this.typeName = typeName;</span>
+<span class="nc" id="L153">    }</span>
+
+    /**
+     * Gets the string name of the metric type.
+     *
+     * @return The name of the type as a string.
+     */
+    public String getTypeName() {
+<span class="nc" id="L161">      return typeName;</span>
     }
-
-    /**
-     * Logs the metric string in both human-readable and byte array format for debugging.
-     *
-     * @param metric The formatted metric string to log.
-     */
-    private void logMetric(String metric) {
-<span class="nc" id="L96">        logger.info(&quot;Sending (Human): &quot; + metric);</span>
-<span class="nc" id="L97">        logger.info(&quot;Sending (Bytes): &quot; + Arrays.toString(metric.getBytes(StandardCharsets.UTF_8)));</span>
-<span class="nc" id="L98">    }</span>
-
-    /**
-     * Writes the formatted metric string to the provided OutputStream of the socket.
-     *
-     * @param metric The metric string to send.
-     * @param os     The output stream of the connected socket.
-     * @throws IOException if an I/O error occurs when writing to the stream.
-     */
-    private void writeMetricToSocket(String metric, OutputStream os) throws IOException {
-<span class="nc" id="L108">        os.write(metric.getBytes(StandardCharsets.UTF_8));</span>
-<span class="nc" id="L109">        os.flush();</span>
-<span class="nc" id="L110">    }</span>
-
-    /**
-     * Reads the response from the collectd daemon from the socket's InputStream and logs it.
-     *
-     * @param is The input stream of the connected socket.
-     * @throws IOException if an I/O error occurs when reading from the stream.
-     */
-    private void readCollectdResponse(InputStream is) throws IOException {
-        // Lies die Antwort von collectd (optional: Buffer und Timeout setzen)
-<span class="nc" id="L120">        byte[] buffer = new byte[1024];</span>
-<span class="nc" id="L121">        int bytesRead = is.read(buffer);  // blockiert bis collectd antwortet oder EOF</span>
-
-<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (bytesRead != -1) {</span>
-<span class="nc" id="L124">            String response = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);</span>
-<span class="nc" id="L125">            logger.info(&quot;Collectd responded: &quot; + response);</span>
-        }
-<span class="nc" id="L127">    }</span>
-
-    /**
-     * Represents the types of metrics that can be sent to collectd.
-     */
-<span class="nc" id="L132">    public enum CollectdType {</span>
-        /** A gauge value is for storing values that can increase or decrease, like temperature. */
-<span class="nc" id="L134">        GAUGE(&quot;gauge&quot;),</span>
-        /** A counter is for values that only increase, like the number of requests. It will be reset on overflow. */
-<span class="nc" id="L136">        COUNTER(&quot;counter&quot;),</span>
-        /** A derive value is stored as a rate of change. It's like a counter but for non-monotonic values. */
-<span class="nc" id="L138">        DERIVE(&quot;derive&quot;),</span>
-        /** An absolute value is for counters that are reset upon reading. */
-<span class="nc" id="L140">        ABSOLUTE(&quot;absolute&quot;);</span>
-
-        private final String typeName;
-
-        /**
-         * Constructs a CollectdType enum constant.
-         * @param typeName The string representation of the type used by collectd.
-         */
-<span class="nc" id="L148">        CollectdType(String typeName) {</span>
-<span class="nc" id="L149">            this.typeName = typeName;</span>
-<span class="nc" id="L150">        }</span>
-
-        /**
-         * Gets the string name of the metric type.
-         * @return The name of the type as a string.
-         */
-        public String getTypeName() {
-<span class="nc" id="L157">            return typeName;</span>
-        }
-    }
-
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

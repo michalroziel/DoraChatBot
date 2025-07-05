@@ -1,95 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Message.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.entities</a> &gt; <span class="el_source">Message.java</span></div><h1>Message.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.entities;
 
-import jakarta.persistence.*;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import jakarta.persistence.*;
 
-/**
- * Represents a single message within a conversation.
- */
+/** Represents a single message within a conversation. */
 @Entity
 public class Message {
-    /**
-     * Default constructor. Required by JPA.
-     */
-<span class="nc" id="L14">    public Message() {}</span>
+  /** Default constructor. Required by JPA. */
+<span class="nc" id="L10">  public Message() {}</span>
 
-    /**
-     * Defines the originator of the message.
-     */
-<span class="nc" id="L19">    public enum MessageType{</span>
-        /**
-         * A message from the user.
-         */
-<span class="nc" id="L23">        USER,</span>
-        /**
-         * A message from the bot.
-         */
-<span class="nc" id="L27">        BOT</span>
-    }
+  /** Defines the originator of the message. */
+<span class="nc" id="L13">  public enum MessageType {</span>
+    /** A message from the user. */
+<span class="nc" id="L15">    USER,</span>
+    /** A message from the bot. */
+<span class="nc" id="L17">    BOT</span>
+  }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = &quot;conversation_id&quot;)
-    private Conversation conversation;
+  @ManyToOne
+  @JoinColumn(name = &quot;conversation_id&quot;)
+  private Conversation conversation;
 
-    private MessageType messageType;
-    private String content;
+  private MessageType messageType;
+  private String content;
 
-    /**
-     * Constructs a new Message.
-     * @param messageType The type of the message (USER or BOT).
-     * @param conversation The conversation this message belongs to.
-     * @param message The text content of the message.
-     */
-    @SuppressFBWarnings(&quot;EI_EXPOSE_REP2&quot;)
-<span class="nc" id="L48">    public Message(MessageType messageType, Conversation conversation, String message) {</span>
-<span class="nc" id="L49">        this.content = message;</span>
-<span class="nc" id="L50">        this.conversation = conversation;</span>
-<span class="nc" id="L51">        this.messageType = messageType;</span>
-<span class="nc" id="L52">    }</span>
+  /**
+   * Constructs a new Message.
+   *
+   * @param messageType The type of the message (USER or BOT).
+   * @param conversation The conversation this message belongs to.
+   * @param message The text content of the message.
+   */
+  @SuppressFBWarnings(&quot;EI_EXPOSE_REP2&quot;)
+<span class="nc" id="L39">  public Message(MessageType messageType, Conversation conversation, String message) {</span>
+<span class="nc" id="L40">    this.content = message;</span>
+<span class="nc" id="L41">    this.conversation = conversation;</span>
+<span class="nc" id="L42">    this.messageType = messageType;</span>
+<span class="nc" id="L43">  }</span>
 
-    /**
-     * Gets the type of the message.
-     * @return The message type (USER or BOT).
-     */
-    public MessageType getMessageType() {
-<span class="nc" id="L59">        return messageType;</span>
-    }
+  /**
+   * Gets the type of the message.
+   *
+   * @return The message type (USER or BOT).
+   */
+  public MessageType getMessageType() {
+<span class="nc" id="L51">    return messageType;</span>
+  }
 
-    /**
-     * Gets the conversation this message is part of.
-     * @return The parent conversation.
-     */
-    @SuppressFBWarnings(&quot;EI_EXPOSE_REP&quot;)
-    public Conversation getConversation() {
-<span class="nc" id="L68">        return conversation;</span>
-    }
+  /**
+   * Gets the conversation this message is part of.
+   *
+   * @return The parent conversation.
+   */
+  @SuppressFBWarnings(&quot;EI_EXPOSE_REP&quot;)
+  public Conversation getConversation() {
+<span class="nc" id="L61">    return conversation;</span>
+  }
 
-    /**
-     * Gets the text content of the message.
-     * @return The message content.
-     */
-    public String getContent() {
-<span class="nc" id="L76">        return content;</span>
-    }
+  /**
+   * Gets the text content of the message.
+   *
+   * @return The message content.
+   */
+  public String getContent() {
+<span class="nc" id="L70">    return content;</span>
+  }
 
-    /**
-     * Gets the unique identifier for this message.
-     * @return The message's ID.
-     */
-    public long getId() {
-<span class="nc" id="L84">        return id;</span>
-    }
+  /**
+   * Gets the unique identifier for this message.
+   *
+   * @return The message's ID.
+   */
+  public long getId() {
+<span class="nc" id="L79">    return id;</span>
+  }
 
-    /**
-     * Checks if the message content is null or empty.
-     * @return true if the content is null or consists only of whitespace, false otherwise.
-     */
-    public boolean isEmpty() {
-<span class="nc bnc" id="L92" title="All 4 branches missed.">        return content == null || content.trim().isEmpty();</span>
-    }
+  /**
+   * Checks if the message content is null or empty.
+   *
+   * @return true if the content is null or consists only of whitespace, false otherwise.
+   */
+  public boolean isEmpty() {
+<span class="nc bnc" id="L88" title="All 4 branches missed.">    return content == null || content.trim().isEmpty();</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

@@ -4,60 +4,68 @@ import de.sesqa.ase.dto.ConversationSummaryResponse;
 import de.sesqa.ase.dto.MessageResponse;
 import de.sesqa.ase.entities.Message;
 import de.sesqa.ase.repositories.ConversationRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class ConversationService {
 
-    private final ConversationRepository conversationRepository;
+  private final ConversationRepository conversationRepository;
 
-    /**
-     * Constructs the ConversationService with the necessary repository.
-     *
-     * @param conversationRepository The repository for conversation data access.
-     */
-<span class="nc" id="L22">    public ConversationService (ConversationRepository conversationRepository) {</span>
-<span class="nc" id="L23">        this.conversationRepository = conversationRepository;</span>
-<span class="nc" id="L24">    }</span>
+  /**
+   * Constructs the ConversationService with the necessary repository.
+   *
+   * @param conversationRepository The repository for conversation data access.
+   */
+<span class="nc" id="L22">  public ConversationService(ConversationRepository conversationRepository) {</span>
+<span class="nc" id="L23">    this.conversationRepository = conversationRepository;</span>
+<span class="nc" id="L24">  }</span>
 
-    /**
-     * API endpoint to retrieve a summary of all chat conversations.
-     *
-     * @return A list of {@link ConversationSummaryResponse} objects.
-     */
+  /**
+   * API endpoint to retrieve a summary of all chat conversations.
+   *
+   * @return A list of {@link ConversationSummaryResponse} objects.
+   */
+  public List&lt;ConversationSummaryResponse&gt; getHistory() {
+<span class="nc" id="L32">    return conversationRepository.findAll().stream()</span>
+<span class="nc" id="L33">        .map(</span>
+            conversation -&gt; {
+<span class="nc" id="L35">              String title =</span>
+<span class="nc" id="L36">                  conversation.getMessages().stream()</span>
+<span class="nc" id="L37">                      .findFirst()</span>
+<span class="nc" id="L38">                      .map(Message::getContent)</span>
+<span class="nc" id="L39">                      .orElse(&quot;Conversation &quot; + conversation.getId());</span>
 
-    public List&lt;ConversationSummaryResponse&gt; getHistory() {
-<span class="nc" id="L33">        return conversationRepository.findAll().stream()</span>
-<span class="nc" id="L34">                .map(conversation -&gt; {</span>
-<span class="nc" id="L35">                    String title = conversation.getMessages().stream()</span>
-<span class="nc" id="L36">                            .findFirst()</span>
-<span class="nc" id="L37">                            .map(Message::getContent)</span>
-<span class="nc" id="L38">                            .orElse(&quot;Conversation &quot; + conversation.getId());</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">              if (title.length() &gt; 35) {</span>
+<span class="nc" id="L42">                title = title.substring(0, 30) + &quot;...&quot;;</span>
+              }
 
-<span class="nc bnc" id="L40" title="All 2 branches missed.">                    if (title.length() &gt; 35) {</span>
-<span class="nc" id="L41">                        title = title.substring(0, 30) + &quot;...&quot;;</span>
-                    }
+<span class="nc" id="L45">              return new ConversationSummaryResponse(conversation.getId(), title);</span>
+            })
+<span class="nc" id="L47">        .collect(Collectors.toList());</span>
+  }
 
-<span class="nc" id="L44">                    return new ConversationSummaryResponse(conversation.getId(), title);</span>
-                })
-<span class="nc" id="L46">                .collect(Collectors.toList());</span>
-    }
-
-    /**
-     * API endpoint to retrieve all messages for a specific conversation.
-     *
-     * @param id The ID of the conversation.
-     * @return A list of {@link MessageResponse} objects for the given conversation, or an empty list if not found.
-     */
-    public List&lt;MessageResponse&gt; getConversationMessages(@PathVariable Long id) {
-<span class="nc" id="L56">        return conversationRepository.findById(id)</span>
-<span class="nc" id="L57">                .map(conversation -&gt; conversation.getMessages().stream()</span>
-<span class="nc" id="L58">                        .map(message -&gt; new MessageResponse(message.getContent(), message.getMessageType().name()))</span>
-<span class="nc" id="L59">                        .collect(Collectors.toList()))</span>
-<span class="nc" id="L60">                .orElse(List.of()); // Return an empty list if conversation not found</span>
-    }
+  /**
+   * API endpoint to retrieve all messages for a specific conversation.
+   *
+   * @param id The ID of the conversation.
+   * @return A list of {@link MessageResponse} objects for the given conversation, or an empty list
+   *     if not found.
+   */
+  public List&lt;MessageResponse&gt; getConversationMessages(@PathVariable Long id) {
+<span class="nc" id="L58">    return conversationRepository</span>
+<span class="nc" id="L59">        .findById(id)</span>
+<span class="nc" id="L60">        .map(</span>
+            conversation -&gt;
+<span class="nc" id="L62">                conversation.getMessages().stream()</span>
+<span class="nc" id="L63">                    .map(</span>
+                        message -&gt;
+<span class="nc" id="L65">                            new MessageResponse(</span>
+<span class="nc" id="L66">                                message.getContent(), message.getMessageType().name()))</span>
+<span class="nc" id="L67">                    .collect(Collectors.toList()))</span>
+<span class="nc" id="L68">        .orElse(List.of()); // Return an empty list if conversation not found</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

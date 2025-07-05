@@ -6,36 +6,34 @@ import de.sesqa.ase.dto.ConversationSummaryResponse;
 import de.sesqa.ase.dto.MessageResponse;
 import de.sesqa.ase.services.ConversationService;
 import de.sesqa.ase.services.MessageService;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(&quot;/api/chat&quot;)
 public class ChatController {
 
-    private final MessageService messageService;
-    private final ConversationService conversationService;
+  private final MessageService messageService;
+  private final ConversationService conversationService;
 
-<span class="nc" id="L20">    public ChatController(MessageService messageService, ConversationService conversationService) {</span>
-<span class="nc" id="L21">        this.messageService = messageService;</span>
-<span class="nc" id="L22">        this.conversationService = conversationService;</span>
-<span class="nc" id="L23">    }</span>
+<span class="nc" id="L19">  public ChatController(MessageService messageService, ConversationService conversationService) {</span>
+<span class="nc" id="L20">    this.messageService = messageService;</span>
+<span class="nc" id="L21">    this.conversationService = conversationService;</span>
+<span class="nc" id="L22">  }</span>
 
-    @PostMapping(&quot;/message&quot;)
-    public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
-<span class="nc" id="L27">        return messageService.handleMessage(request);</span>
-    }
+  @PostMapping(&quot;/message&quot;)
+  public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
+<span class="nc" id="L26">    return messageService.handleMessage(request);</span>
+  }
 
-    @GetMapping(&quot;/history&quot;)
-    public List&lt;ConversationSummaryResponse&gt; getHistory() {
-<span class="nc" id="L32">        return conversationService.getHistory();</span>
-    }
+  @GetMapping(&quot;/history&quot;)
+  public List&lt;ConversationSummaryResponse&gt; getHistory() {
+<span class="nc" id="L31">    return conversationService.getHistory();</span>
+  }
 
-    @GetMapping(&quot;/conversation/{id}&quot;)
-    public List&lt;MessageResponse&gt; getConversation(@PathVariable Long id) {
-<span class="nc" id="L37">        return conversationService.getConversationMessages(id);</span>
-    }
-
+  @GetMapping(&quot;/conversation/{id}&quot;)
+  public List&lt;MessageResponse&gt; getConversation(@PathVariable Long id) {
+<span class="nc" id="L36">    return conversationService.getConversationMessages(id);</span>
+  }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
