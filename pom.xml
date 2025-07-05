@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -16,9 +17,9 @@
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <checkstyle.version>10.12.7</checkstyle.version>
     </properties>
 
-    <!-- == Spring Boot Parent POM == -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -26,17 +27,13 @@
         <relativePath/>
     </parent>
 
-
     <dependencies>
-        <!-- == Spothugs annotations == -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
             <version>4.8.3</version>
             <scope>compile</scope>
         </dependency>
-
-        <!-- == Spring Boot == -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -47,19 +44,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- == Log4j2 with Springboot == -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
             <version>3.4.4</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
-        <!-- TODO Aktuelle Version prüfen! -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
@@ -74,23 +67,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
-        <!-- == .Env == -->
-
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
             <version>5.2.2</version>
         </dependency>
-
         <dependency>
             <groupId>com.kohlschutter.junixsocket</groupId>
             <artifactId>junixsocket-core</artifactId>
             <version>2.10.1</version>
             <type>pom</type>
         </dependency>
-
-        <!-- == Junit 5 == -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -109,10 +96,14 @@
             <version>5.18.0</version>
             <scope>test</scope>
         </dependency>
-
+        <!-- Google Checkstyle config dependency -->
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${checkstyle.version}</version>
+        </dependency>
     </dependencies>
 
-    <!-- == Profile for Checkstyle so that it can be disabled for mvn site == -->
     <profiles>
         <profile>
             <id>checkstyle-on-build</id>
@@ -126,6 +117,7 @@
                         <artifactId>maven-checkstyle-plugin</artifactId>
                         <version>3.6.0</version>
                         <configuration>
+                            <configLocation>google_checks.xml</configLocation>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>false</failsOnError>
                             <linkXRef>false</linkXRef>
@@ -155,13 +147,10 @@
         </resources>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
-            <!-- == Spring Boot Maven Plugin == -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <!-- == Build Number Maven Plugin == -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -178,8 +167,6 @@
                     <shortRevisionLength>8</shortRevisionLength>
                 </configuration>
             </plugin>
-
-            <!-- == Error Prone Maven Plugin == -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -202,8 +189,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
-            <!-- == SpotBugs Maven Plugin with FindSecBugs == -->
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
@@ -217,7 +202,6 @@
                     </execution>
                 </executions>
                 <dependencies>
-                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
                     <dependency>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs</artifactId>
@@ -234,9 +218,6 @@
                     </plugins>
                 </configuration>
             </plugin>
-
-
-            <!-- == JUnit 5 Maven Plugin == -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -266,7 +247,6 @@
                     </statelessTestsetInfoReporter>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -294,13 +274,21 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
+                <version>0.8.13</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
+                    <configLocation>google_checks.xml</configLocation>
                     <failsOnError>false</failsOnError>
                 </configuration>
                 <reportSets>
