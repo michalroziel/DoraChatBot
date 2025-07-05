@@ -95,7 +95,7 @@ jobs:
           java-version: '21'
 
       - name: Generate site
-        run: mvn site -P !checkstyle-on-build -DskipTests
+        run: mvn site
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
