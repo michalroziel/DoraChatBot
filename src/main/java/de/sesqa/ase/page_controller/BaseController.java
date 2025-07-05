@@ -20,13 +20,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Main controller for handling web requests.
+ * This includes serving the main page, handling chat history, and processing chat messages.
+ */
 @Controller
 public class BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
+    /**
+     * The application version, injected from application properties.
+     */
     @Value("${version:unknown}")
     private String version;
 
+    /**
+     * The build hash, injected from application properties.
+     */
     @Value("${buildHash:unknown}")
     private String buildNumber;
 
@@ -34,6 +44,12 @@ public class BaseController {
     private final ConversationRepository conversationRepository;
     private final CollectdClient collectdClient;
 
+    /**
+     * Constructs the BaseController with necessary repositories.
+     *
+     * @param messageRepository      Repository for message data access.
+     * @param conversationRepository Repository for conversation data access.
+     */
     public BaseController(
             MessageRepository messageRepository,
             ConversationRepository conversationRepository
@@ -45,6 +61,12 @@ public class BaseController {
         logger.info("BaseController initialized:\nversion: {}\nbuildNumber: {}", version, buildNumber);
     }
 
+    /**
+     * Serves the main index page.
+     *
+     * @param model The Spring UI model to add attributes to.
+     * @return The name of the view template to render ("index").
+     */
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("version", version);
@@ -53,6 +75,11 @@ public class BaseController {
         return "index";
     }
 
+    /**
+     * API endpoint to retrieve a summary of all chat conversations.
+     *
+     * @return A list of {@link ConversationSummaryResponse} objects.
+     */
     @GetMapping("/api/chat/history")
     @ResponseBody
     public List<ConversationSummaryResponse> getHistory() {
@@ -72,6 +99,12 @@ public class BaseController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * API endpoint to retrieve all messages for a specific conversation.
+     *
+     * @param id The ID of the conversation.
+     * @return A list of {@link MessageResponse} objects for the given conversation, or an empty list if not found.
+     */
     @GetMapping("/api/chat/conversation/{id}")
     @ResponseBody
     public List<MessageResponse> getConversationMessages(@PathVariable Long id) {
@@ -82,12 +115,25 @@ public class BaseController {
                 .orElse(List.of()); // Return an empty list if conversation not found
     }
 
+    /**
+     * A simple health-check endpoint.
+     *
+     * @return The string "pong".
+     */
     @GetMapping("/ping")
     @ResponseBody
     public String ping() {
         return "pong";
     }
 
+    /**
+     * Handles incoming chat messages from the user.
+     * It finds or creates a conversation, saves the user message, queries an external API for a response,
+     * saves the bot's response, and returns it to the client.
+     *
+     * @param request The chat message request from the client.
+     * @return A {@link ChatMessageResponse} containing the bot's reply and the conversation ID.
+     */
     @PostMapping("/api/chat/message")
     @ResponseBody
     public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
@@ -97,7 +143,7 @@ public class BaseController {
         }
         logger.info("""
             Received chat message request:\
-            
+
             conversationId: {}
             content: {}""", request.getConversationId(), request.getContent());
         try {
@@ -133,6 +179,11 @@ public class BaseController {
         }
     }
 
+    /**
+     * Creates and persists a new Conversation entity.
+     *
+     * @return The newly created {@link Conversation}.
+     */
     private Conversation createConversation() {
         Conversation conversation = new Conversation();
         conversationRepository.save(conversation);
@@ -141,12 +192,22 @@ public class BaseController {
         return conversation;
     }
 
+    /**
+     * Sends metrics about received messages to Collectd.
+     */
     private void sendReceivedMetrics() {
         long count = messageRepository.count();
         collectdClient.sendMetric("received", CollectdClient.CollectdType.GAUGE, count);
         logger.info("Sending received metrics to Collectd: message count = {}", count);
     }
 
+    /**
+     * Creates and saves a user message to the database.
+     *
+     * @param conversation The conversation the message belongs to.
+     * @param message      The content of the user's message.
+     * @return The saved {@link Message} entity.
+     */
     private Message saveUserMessage(Conversation conversation, String message) {
         Message userMsg = new Message(Message.MessageType.USER, conversation, message);
         messageRepository.save(userMsg);
