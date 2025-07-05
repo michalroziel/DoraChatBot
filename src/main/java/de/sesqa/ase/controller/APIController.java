@@ -1,4 +1,4 @@
-package de.sesqa.ase.page_controller;
+package de.sesqa.ase.controller;
 
 import de.sesqa.ase.api.APIWrapper;
 import de.sesqa.ase.dto.ChatMessageRequest;
@@ -12,68 +12,28 @@ import de.sesqa.ase.repositories.ConversationRepository;
 import de.sesqa.ase.repositories.MessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Main controller for handling web requests.
- * This includes serving the main page, handling chat history, and processing chat messages.
- */
 @Controller
-public class BaseController {
-    private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+public class APIController {
 
-    /**
-     * The application version, injected from application properties.
-     */
-    @Value("${version:unknown}")
-    private String version;
+    private static final Logger logger = LoggerFactory.getLogger(APIController.class);
 
-    /**
-     * The build hash, injected from application properties.
-     */
-    @Value("${buildHash:unknown}")
-    private String buildNumber;
 
     private final MessageRepository messageRepository;
     private final ConversationRepository conversationRepository;
     private final CollectdClient collectdClient;
 
-    /**
-     * Constructs the BaseController with necessary repositories.
-     *
-     * @param messageRepository      Repository for message data access.
-     * @param conversationRepository Repository for conversation data access.
-     */
-    public BaseController(
-            MessageRepository messageRepository,
-            ConversationRepository conversationRepository
-    ) {
+    public APIController(MessageRepository messageRepository, ConversationRepository conversationRepository) {
         this.messageRepository = messageRepository;
         this.conversationRepository = conversationRepository;
         this.collectdClient = new CollectdClient();
-
-        logger.info("BaseController initialized:\nversion: {}\nbuildNumber: {}", version, buildNumber);
     }
 
-    /**
-     * Serves the main index page.
-     *
-     * @param model The Spring UI model to add attributes to.
-     * @return The name of the view template to render ("index").
-     */
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("version", version);
-        model.addAttribute("buildNumber", buildNumber);
-
-        return "index";
-    }
 
     /**
      * API endpoint to retrieve a summary of all chat conversations.
@@ -116,17 +76,6 @@ public class BaseController {
     }
 
     /**
-     * A simple health-check endpoint.
-     *
-     * @return The string "pong".
-     */
-    @GetMapping("/ping")
-    @ResponseBody
-    public String ping() {
-        return "pong";
-    }
-
-    /**
      * Handles incoming chat messages from the user.
      * It finds or creates a conversation, saves the user message, queries an external API for a response,
      * saves the bot's response, and returns it to the client.
@@ -142,10 +91,10 @@ public class BaseController {
             return new ChatMessageResponse("Request cannot be null.", null);
         }
         logger.info("""
-            Received chat message request:\
-
-            conversationId: {}
-            content: {}""", request.getConversationId(), request.getContent());
+                Received chat message request:\
+                
+                conversationId: {}
+                content: {}""", request.getConversationId(), request.getContent());
         try {
             Conversation conversation;
             if (request.getConversationId() != null) {
@@ -178,6 +127,7 @@ public class BaseController {
             return new ChatMessageResponse("Error processing message: " + e.getMessage(), conversationId);
         }
     }
+
 
     /**
      * Creates and persists a new Conversation entity.
