@@ -25,7 +25,7 @@ public class IndexController {
 
   /** Constructs the BaseController with necessary repositories. */
   public IndexController() {
-    logger.info("BaseController initialized:\nversion: {}\nbuildNumber: {}", version, buildNumber);
+    logger.info("IndexController initialized:\nversion: {}\nbuildNumber: {}", version, buildNumber);
   }
 
   /**
