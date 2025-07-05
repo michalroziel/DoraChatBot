@@ -1,5 +1,7 @@
 package de.sesqa.ase;
 
+import jakarta.annotation.PostConstruct;
+import java.io.File;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -28,8 +30,28 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
       "de.sesqa.ase.services",
     })
 public class DoraChatBot {
+
   /**
-   * Starts the DoraChatBot Spring Boot application.
+   * Ensures that the `data` directory exists in the application root.
+   *
+   * <p>This method is executed after the Spring context is initialized, but before the application
+   * starts serving requests. It creates the `data` directory if it does not already exist, which is
+   * required for the SQLite database file. If the directory cannot be created, an exception is
+   * thrown.
+   */
+  @PostConstruct
+  public void ensureDataDirectoryExists() {
+    File dataDir = new File("data");
+    if (!dataDir.exists()) {
+      if (!dataDir.mkdirs()) {
+        throw new IllegalStateException(
+            "Failed to create required data directory: " + dataDir.getAbsolutePath());
+      }
+    }
+  }
+
+  /**
+   * Main method to launch the Spring Boot application.
    *
    * @param args command-line arguments passed to the application
    */
