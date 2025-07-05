@@ -91,8 +91,15 @@ public class BaseController {
     @PostMapping("/api/chat/message")
     @ResponseBody
     public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
-        logger.info("Received chat message request:" +
-                "\nconversationId: {}\ncontent: {}", request.getConversationId(), request.getContent());
+        if (request == null) {
+            logger.error("Received null ChatMessageRequest");
+            return new ChatMessageResponse("Request cannot be null.", null);
+        }
+        logger.info("""
+            Received chat message request:\
+            
+            conversationId: {}
+            content: {}""", request.getConversationId(), request.getContent());
         try {
             Conversation conversation;
             if (request.getConversationId() != null) {
@@ -121,7 +128,7 @@ public class BaseController {
             return new ChatMessageResponse(botMessage.getContent(), conversation.getId());
         } catch (Exception e) {
             logger.error("Error processing message", e);
-            Long conversationId = (request != null) ? request.getConversationId() : null;
+            Long conversationId = request.getConversationId();
             return new ChatMessageResponse("Error processing message: " + e.getMessage(), conversationId);
         }
     }
@@ -129,7 +136,7 @@ public class BaseController {
     private Conversation createConversation() {
         Conversation conversation = new Conversation();
         conversationRepository.save(conversation);
-        logger.info("New conversation started with ID: " + conversation.getId());
+        logger.info("New conversation started with ID: {}", conversation.getId());
 
         return conversation;
     }
