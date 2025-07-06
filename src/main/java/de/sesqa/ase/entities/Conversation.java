@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,6 +54,9 @@ public class Conversation {
    * @param message The message to be added.
    */
   public void addMessages(Message message) {
+    if (messages == null) {
+      messages = new ArrayList<>();
+    }
     messages.add(message);
   }
 
