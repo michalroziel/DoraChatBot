@@ -12,6 +12,16 @@ public class ChatMessageRequest {
   private Long conversationId;
 
   /**
+   * Constructs a new ChatMessageRequest with specified content and conversation ID.
+   * @param content The content of the chat message.
+   * @param conversationId The ID of the conversation to which the message belongs.
+   */
+  public ChatMessageRequest(String content, Long conversationId) {
+    this.content = content;
+    this.conversationId = conversationId;
+  }
+
+  /**
    * Gets the content of the chat message.
    *
    * @return The message content.
