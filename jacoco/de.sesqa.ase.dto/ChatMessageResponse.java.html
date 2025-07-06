@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChatMessageResponse.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">DoraChatBot</a> &gt; <a href="index.source.html" class="el_package">de.sesqa.ase.dto</a> &gt; <span class="el_source">ChatMessageResponse.java</span></div><h1>ChatMessageResponse.java</h1><pre class="source lang-java linenums">package de.sesqa.ase.dto;
+
+/**
+ * Represents the response object for a chat message. This DTO is used to send chat message data
+ * back to the client.
+ */
+public class ChatMessageResponse {
+  /** The text content of the chat message. */
+  private String content;
+
+  /** The unique identifier of the conversation to which the message belongs. */
+  private Long conversationId;
+
+  /**
+   * Constructs a new ChatMessageResponse with the specified content and conversation ID.
+   *
+   * @param content The content of the message.
+   * @param conversationId The ID of the conversation.
+   */
+<span class="fc" id="L20">  public ChatMessageResponse(String content, Long conversationId) {</span>
+<span class="fc" id="L21">    this.content = content;</span>
+<span class="fc" id="L22">    this.conversationId = conversationId;</span>
+<span class="fc" id="L23">  }</span>
+
+  /**
+   * Gets the content of the chat message.
+   *
+   * @return The message content.
+   */
+  public String getContent() {
+<span class="nc" id="L31">    return content;</span>
+  }
+
+  /**
+   * Sets the content of the chat message.
+   *
+   * @param content The message content to set.
+   */
+  public void setContent(String content) {
+<span class="nc" id="L40">    this.content = content;</span>
+<span class="nc" id="L41">  }</span>
+
+  /**
+   * Gets the ID of the conversation.
+   *
+   * @return The conversation ID.
+   */
+  public Long getConversationId() {
+<span class="nc" id="L49">    return conversationId;</span>
+  }
+
+  /**
+   * Sets the ID of the conversation.
+   *
+   * @param conversationId The conversation ID to set.
+   */
+  public void setConversationId(Long conversationId) {
+<span class="nc" id="L58">    this.conversationId = conversationId;</span>
+<span class="nc" id="L59">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
