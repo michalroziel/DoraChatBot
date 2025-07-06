@@ -116,14 +116,14 @@ import org.slf4j.LoggerFactory;
    */
   private void readCollectdResponse(InputStream is) throws IOException {
     // Lies die Antwort von collectd (optional: Buffer und Timeout setzen)
-<span class="nc" id="L119">    byte[] buffer = new byte[1024];</span>
-<span class="nc" id="L120">    int bytesRead = is.read(buffer); // blockiert bis collectd antwortet oder EOF</span>
+<span class="fc" id="L119">    byte[] buffer = new byte[1024];</span>
+<span class="fc" id="L120">    int bytesRead = is.read(buffer); // blockiert bis collectd antwortet oder EOF</span>
 
-<span class="nc bnc" id="L122" title="All 2 branches missed.">    if (bytesRead != -1) {</span>
-<span class="nc" id="L123">      String response = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);</span>
-<span class="nc" id="L124">      logger.info(&quot;Collectd responded: &quot; + response);</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">    if (bytesRead != -1) {</span>
+<span class="fc" id="L123">      String response = new String(buffer, 0, bytesRead, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L124">      logger.info(&quot;Collectd responded: &quot; + response);</span>
     }
-<span class="nc" id="L126">  }</span>
+<span class="fc" id="L126">  }</span>
 
   /** Represents the types of metrics that can be sent to collectd. */
 <span class="fc" id="L129">  public enum CollectdType {</span>

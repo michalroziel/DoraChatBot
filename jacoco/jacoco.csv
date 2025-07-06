@@ -1,5 +1,5 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-DoraChatBot,de.sesqa.ase.api,ApiWrapper,82,14,0,0,22,4,4,1,4,1
+DoraChatBot,de.sesqa.ase.api,ApiWrapper,3,99,0,0,1,29,1,6,1,6
 DoraChatBot,de.sesqa.ase.dto,ConversationSummaryResponse,0,23,0,0,0,10,0,5,0,5
 DoraChatBot,de.sesqa.ase.dto,ChatMessageResponse,0,23,0,0,0,10,0,5,0,5
 DoraChatBot,de.sesqa.ase.dto,MessageResponse,0,23,0,0,0,10,0,5,0,5
@@ -7,9 +7,9 @@ DoraChatBot,de.sesqa.ase.dto,ChatMessageRequest,0,23,0,0,0,10,0,5,0,5
 DoraChatBot,de.sesqa.ase.services,MessageService,0,195,0,6,0,48,0,11,0,8
 DoraChatBot,de.sesqa.ase.services,ConversationService,0,74,0,2,0,23,0,7,0,6
 DoraChatBot,de.sesqa.ase.entities,Message.MessageType,0,15,0,0,0,3,0,1,0,1
-DoraChatBot,de.sesqa.ase.entities,Message,12,28,2,2,3,8,5,4,3,4
+DoraChatBot,de.sesqa.ase.entities,Message,9,31,2,2,2,9,4,5,2,5
 DoraChatBot,de.sesqa.ase.entities,Conversation,0,37,0,4,0,10,0,7,0,5
-DoraChatBot,de.sesqa.ase.metrics,CollectdClient,78,44,2,0,22,9,4,5,3,5
+DoraChatBot,de.sesqa.ase.metrics,CollectdClient,55,67,0,2,16,15,2,7,2,6
 DoraChatBot,de.sesqa.ase.metrics,CollectdClient.CollectdType,0,42,0,0,0,9,0,3,0,3
 DoraChatBot,de.sesqa.ase,DoraChatBot,27,0,4,0,9,0,5,0,3,0
 DoraChatBot,de.sesqa.ase.controller,IndexController,0,28,0,0,0,7,0,3,0,3
