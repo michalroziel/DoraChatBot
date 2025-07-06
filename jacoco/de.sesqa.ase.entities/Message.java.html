@@ -15,11 +15,11 @@ public class Message {
 <span class="nc" id="L15">  public Message() {}</span>
 
   /** Defines the originator of the message. */
-<span class="nc" id="L18">  public enum MessageType {</span>
+<span class="fc" id="L18">  public enum MessageType {</span>
     /** A message from the user. */
-<span class="nc" id="L20">    USER,</span>
+<span class="fc" id="L20">    USER,</span>
     /** A message from the bot. */
-<span class="nc" id="L22">    BOT</span>
+<span class="fc" id="L22">    BOT</span>
   }
 
   @Id
@@ -41,11 +41,11 @@ public class Message {
    * @param message The text content of the message.
    */
   @SuppressFBWarnings(&quot;EI_EXPOSE_REP2&quot;)
-<span class="nc" id="L44">  public Message(MessageType messageType, Conversation conversation, String message) {</span>
-<span class="nc" id="L45">    this.content = message;</span>
-<span class="nc" id="L46">    this.conversation = conversation;</span>
-<span class="nc" id="L47">    this.messageType = messageType;</span>
-<span class="nc" id="L48">  }</span>
+<span class="fc" id="L44">  public Message(MessageType messageType, Conversation conversation, String message) {</span>
+<span class="fc" id="L45">    this.content = message;</span>
+<span class="fc" id="L46">    this.conversation = conversation;</span>
+<span class="fc" id="L47">    this.messageType = messageType;</span>
+<span class="fc" id="L48">  }</span>
 
   /**
    * Gets the type of the message.
@@ -53,7 +53,7 @@ public class Message {
    * @return The message type (USER or BOT).
    */
   public MessageType getMessageType() {
-<span class="nc" id="L56">    return messageType;</span>
+<span class="fc" id="L56">    return messageType;</span>
   }
 
   /**
@@ -72,7 +72,7 @@ public class Message {
    * @return The message content.
    */
   public String getContent() {
-<span class="nc" id="L75">    return content;</span>
+<span class="fc" id="L75">    return content;</span>
   }
 
   /**

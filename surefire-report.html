@@ -85,12 +85,12 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td align="left">9</td>
+<td align="left">16</td>
 <td align="left">0</td>
 <td align="left">0</td>
 <td align="left">0</td>
 <td align="left">100%</td>
-<td align="left">2.982</td></tr></table><br />
+<td align="left">4.021</td></tr></table><br />
 <p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></section><section><a id="Package_List"></a>
 <h2><a name="Package_List"></a>Package List</h2>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
@@ -110,7 +110,7 @@ function toggleDisplay(elementId) {
 <td align="left">0</td>
 <td align="left">0</td>
 <td align="left">100%</td>
-<td align="left">1.798</td></tr>
+<td align="left">2.346</td></tr>
 <tr class="a">
 <td align="left"><a href="#de.sesqa.ase">de.sesqa.ase</a></td>
 <td align="left">1</td>
@@ -118,7 +118,15 @@ function toggleDisplay(elementId) {
 <td align="left">0</td>
 <td align="left">0</td>
 <td align="left">100%</td>
-<td align="left">1.184</td></tr></table><br />
+<td align="left">1.415</td></tr>
+<tr class="b">
+<td align="left"><a href="#de.sesqa.ase.services">de.sesqa.ase.services</a></td>
+<td align="left">7</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">100%</td>
+<td align="left">0.26</td></tr></table><br />
 <p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p><section><a id="de.sesqa.ase.controller"></a>
 <h3><a name="de.sesqa.ase.controller"></a>de.sesqa.ase.controller</h3>
 <table border="0" class="bodyTable">
@@ -148,7 +156,7 @@ function toggleDisplay(elementId) {
 <td align="left">0</td>
 <td align="left">0</td>
 <td align="left">100%</td>
-<td align="left">1.576</td></tr></table></section><section><a id="de.sesqa.ase"></a>
+<td align="left">2.124</td></tr></table></section><section><a id="de.sesqa.ase"></a>
 <h3><a name="de.sesqa.ase"></a>de.sesqa.ase</h3>
 <table border="0" class="bodyTable">
 <tr class="a">
@@ -168,7 +176,27 @@ function toggleDisplay(elementId) {
 <td align="left">0</td>
 <td align="left">0</td>
 <td align="left">100%</td>
-<td align="left">1.184</td></tr></table></section><br /></section><section><a id="Test_Cases"></a>
+<td align="left">1.415</td></tr></table></section><section><a id="de.sesqa.ase.services"></a>
+<h3><a name="de.sesqa.ase.services"></a>de.sesqa.ase.services</h3>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors</th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td align="left"><a href="#de.sesqa.ase.services.ConversationServiceTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td align="left"><a href="#de.sesqa.ase.services.ConversationServiceTest">ConversationServiceTest</a></td>
+<td align="left">7</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">100%</td>
+<td align="left">0.26</td></tr></table></section><br /></section><section><a id="Test_Cases"></a>
 <h2><a name="Test_Cases"></a>Test Cases</h2>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><section><a id="de.sesqa.ase.controller.ChatControllerTest"></a>
 <h3><a name="ChatControllerTest"></a>ChatControllerTest</h3>
@@ -176,7 +204,7 @@ function toggleDisplay(elementId) {
 <tr class="a">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.controller.ChatControllerTest.getHistory_returns_empty_list_when_there_are_no_conversations"></a>getHistory returns empty list when there are no conversations</td>
-<td align="left">0.193</td></tr>
+<td align="left">0.191</td></tr>
 <tr class="b">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.controller.ChatControllerTest.getConversation_returns_messages_for_valid_conversation_id"></a>getConversation returns messages for valid conversation id</td>
@@ -188,31 +216,61 @@ function toggleDisplay(elementId) {
 <tr class="b">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.controller.ChatControllerTest.handleMessage_returns_response_from_messageService_for_valid_request"></a>handleMessage returns response from messageService for valid request</td>
-<td align="left">0.009</td></tr>
+<td align="left">0.006</td></tr>
 <tr class="a">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.controller.ChatControllerTest.getConversation_returns_empty_list_for_unknown_conversation_id"></a>getConversation returns empty list for unknown conversation id</td>
-<td align="left">0.002</td></tr>
+<td align="left">0.004</td></tr>
 <tr class="b">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.controller.ChatControllerTest.handleMessage_handles_null_request_gracefully"></a>handleMessage handles null request gracefully</td>
-<td align="left">0.002</td></tr></table></section><section><a id="de.sesqa.ase.controller.IndexControllerTest"></a>
+<td align="left">0.003</td></tr></table></section><section><a id="de.sesqa.ase.controller.IndexControllerTest"></a>
 <h3><a name="IndexControllerTest"></a>IndexControllerTest</h3>
 <table border="0" class="bodyTable">
 <tr class="a">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.controller.IndexControllerTest.Should_handle_null_model_gracefully"></a>Should handle null model gracefully</td>
-<td align="left">1.424</td></tr>
+<td align="left">1.957</td></tr>
 <tr class="b">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.controller.IndexControllerTest.Should_add_version_and_buildNumber_to_model_and_return_index_view"></a>Should add version and buildNumber to model and return index view</td>
-<td align="left">0.144</td></tr></table></section><section><a id="de.sesqa.ase.OpenAiPingTest"></a>
+<td align="left">0.161</td></tr></table></section><section><a id="de.sesqa.ase.services.ConversationServiceTest"></a>
+<h3><a name="ConversationServiceTest"></a>ConversationServiceTest</h3>
+<table border="0" class="bodyTable">
+<tr class="a">
+<td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
+<td align="left"><a id="TC_de.sesqa.ase.services.ConversationServiceTest.getHistory_returnsEmptyListWhenNoConversations"></a>getHistory_returnsEmptyListWhenNoConversations</td>
+<td align="left">0.218</td></tr>
+<tr class="b">
+<td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
+<td align="left"><a id="TC_de.sesqa.ase.services.ConversationServiceTest.getConversationMessages_returnsEmptyListWhenConversationHasNoMessages"></a>getConversationMessages_returnsEmptyListWhenConversationHasNoMessages</td>
+<td align="left">0.004</td></tr>
+<tr class="a">
+<td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
+<td align="left"><a id="TC_de.sesqa.ase.services.ConversationServiceTest.getHistory_truncatesLongTitle"></a>getHistory_truncatesLongTitle</td>
+<td align="left">0.009</td></tr>
+<tr class="b">
+<td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
+<td align="left"><a id="TC_de.sesqa.ase.services.ConversationServiceTest.getHistory_returnsSummaryWithFirstMessageAsTitle"></a>getHistory_returnsSummaryWithFirstMessageAsTitle</td>
+<td align="left">0.004</td></tr>
+<tr class="a">
+<td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
+<td align="left"><a id="TC_de.sesqa.ase.services.ConversationServiceTest.getHistory_returnsDefaultTitleWhenNoMessages"></a>getHistory_returnsDefaultTitleWhenNoMessages</td>
+<td align="left">0.003</td></tr>
+<tr class="b">
+<td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
+<td align="left"><a id="TC_de.sesqa.ase.services.ConversationServiceTest.getConversationMessages_returnsMessagesForExistingConversation"></a>getConversationMessages_returnsMessagesForExistingConversation</td>
+<td align="left">0.003</td></tr>
+<tr class="a">
+<td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
+<td align="left"><a id="TC_de.sesqa.ase.services.ConversationServiceTest.getConversationMessages_returnsEmptyListWhenConversationNotFound"></a>getConversationMessages_returnsEmptyListWhenConversationNotFound</td>
+<td align="left">0.002</td></tr></table></section><section><a id="de.sesqa.ase.OpenAiPingTest"></a>
 <h3><a name="OpenAiPingTest"></a>OpenAiPingTest</h3>
 <table border="0" class="bodyTable">
 <tr class="a">
 <td align="left"><img src="images/icon_success_sml.gif" alt="" /></td>
 <td align="left"><a id="TC_de.sesqa.ase.OpenAiPingTest.testPingOpenAiAPI"></a>testPingOpenAiAPI</td>
-<td align="left">1.067</td></tr></table></section><br /></section>
+<td align="left">1.26</td></tr></table></section><br /></section>
       </div>
     </div>
     <div class="clear">

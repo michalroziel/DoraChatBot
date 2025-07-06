@@ -24,9 +24,9 @@ public class ConversationService {
    *
    * @param conversationRepository The repository for conversation data access.
    */
-<span class="nc" id="L27">  public ConversationService(ConversationRepository conversationRepository) {</span>
-<span class="nc" id="L28">    this.conversationRepository = conversationRepository;</span>
-<span class="nc" id="L29">  }</span>
+<span class="fc" id="L27">  public ConversationService(ConversationRepository conversationRepository) {</span>
+<span class="fc" id="L28">    this.conversationRepository = conversationRepository;</span>
+<span class="fc" id="L29">  }</span>
 
   /**
    * Retrieves a summary of all chat conversations.
@@ -35,22 +35,22 @@ public class ConversationService {
    *     title (first message content or a default title) for a conversation.
    */
   public List&lt;ConversationSummaryResponse&gt; getHistory() {
-<span class="nc" id="L38">    return conversationRepository.findAll().stream()</span>
-<span class="nc" id="L39">        .map(</span>
+<span class="fc" id="L38">    return conversationRepository.findAll().stream()</span>
+<span class="fc" id="L39">        .map(</span>
             conversation -&gt; {
-<span class="nc" id="L41">              String title =</span>
-<span class="nc" id="L42">                  conversation.getMessages().stream()</span>
-<span class="nc" id="L43">                      .findFirst()</span>
-<span class="nc" id="L44">                      .map(Message::getContent)</span>
-<span class="nc" id="L45">                      .orElse(&quot;Conversation &quot; + conversation.getId());</span>
+<span class="fc" id="L41">              String title =</span>
+<span class="fc" id="L42">                  conversation.getMessages().stream()</span>
+<span class="fc" id="L43">                      .findFirst()</span>
+<span class="fc" id="L44">                      .map(Message::getContent)</span>
+<span class="fc" id="L45">                      .orElse(&quot;Conversation &quot; + conversation.getId());</span>
 
-<span class="nc bnc" id="L47" title="All 2 branches missed.">              if (title.length() &gt; 35) {</span>
-<span class="nc" id="L48">                title = title.substring(0, 30) + &quot;...&quot;;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">              if (title.length() &gt; 35) {</span>
+<span class="fc" id="L48">                title = title.substring(0, 30) + &quot;...&quot;;</span>
               }
 
-<span class="nc" id="L51">              return new ConversationSummaryResponse(conversation.getId(), title);</span>
+<span class="fc" id="L51">              return new ConversationSummaryResponse(conversation.getId(), title);</span>
             })
-<span class="nc" id="L53">        .collect(Collectors.toList());</span>
+<span class="fc" id="L53">        .collect(Collectors.toList());</span>
   }
 
   /**
@@ -61,17 +61,17 @@ public class ConversationService {
    *     if the conversation is not found.
    */
   public List&lt;MessageResponse&gt; getConversationMessages(@PathVariable Long id) {
-<span class="nc" id="L64">    return conversationRepository</span>
-<span class="nc" id="L65">        .findById(id)</span>
-<span class="nc" id="L66">        .map(</span>
+<span class="fc" id="L64">    return conversationRepository</span>
+<span class="fc" id="L65">        .findById(id)</span>
+<span class="fc" id="L66">        .map(</span>
             conversation -&gt;
-<span class="nc" id="L68">                conversation.getMessages().stream()</span>
-<span class="nc" id="L69">                    .map(</span>
+<span class="fc" id="L68">                conversation.getMessages().stream()</span>
+<span class="fc" id="L69">                    .map(</span>
                         message -&gt;
-<span class="nc" id="L71">                            new MessageResponse(</span>
-<span class="nc" id="L72">                                message.getContent(), message.getMessageType().name()))</span>
-<span class="nc" id="L73">                    .collect(Collectors.toList()))</span>
-<span class="nc" id="L74">        .orElse(List.of()); // Return an empty list if conversation not found</span>
+<span class="fc" id="L71">                            new MessageResponse(</span>
+<span class="fc" id="L72">                                message.getContent(), message.getMessageType().name()))</span>
+<span class="fc" id="L73">                    .collect(Collectors.toList()))</span>
+<span class="fc" id="L74">        .orElse(List.of()); // Return an empty list if conversation not found</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>
