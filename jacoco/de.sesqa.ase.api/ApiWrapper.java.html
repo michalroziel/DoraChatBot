@@ -17,16 +17,16 @@ import org.slf4j.LoggerFactory;
  * provides a static method to send a user's message to the API and get a response.
  */
 <span class="nc" id="L19">public class ApiWrapper {</span>
-<span class="nc" id="L20">  private static final Logger logger = LoggerFactory.getLogger(ApiWrapper.class);</span>
+<span class="fc" id="L20">  private static final Logger logger = LoggerFactory.getLogger(ApiWrapper.class);</span>
 
   /** Loads environment variables from a .env file. Used to retrieve the API key. */
-<span class="nc" id="L23">  private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();</span>
+<span class="fc" id="L23">  private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();</span>
 
   /** A reusable HttpClient instance for making HTTP requests. */
-<span class="nc" id="L26">  private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();</span>
+<span class="fc" id="L26">  private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();</span>
 
   /** A reusable ObjectMapper for parsing JSON responses. */
-<span class="nc" id="L29">  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();</span>
+<span class="fc" id="L29">  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();</span>
 
   /**
    * Sends a user's message to the chat API and returns the API's response as a new Message.
