@@ -20,10 +20,10 @@ public class ApiWrapper {
   private static final Logger logger = LoggerFactory.getLogger(ApiWrapper.class);
 
   /** Loads environment variables from a .env file. Used to retrieve the API key. */
-  private static final Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();
+  private static Dotenv DOTENV = Dotenv.configure().ignoreIfMissing().load();
 
   /** A reusable HttpClient instance for making HTTP requests. */
-  private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+  private static HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
   /** A reusable ObjectMapper for parsing JSON responses. */
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -90,5 +90,13 @@ public class ApiWrapper {
     // Parse response body to extract content inside message
     JsonNode rootNode = OBJECT_MAPPER.readTree(responseBody);
     return rootNode.path("choices").get(0).path("message").path("content").asText();
+  }
+
+  public static void setHttpClient(HttpClient client) {
+    HTTP_CLIENT = client;
+  }
+
+  public static void setDotenv(Dotenv dotenv) {
+    DOTENV = dotenv;
   }
 }

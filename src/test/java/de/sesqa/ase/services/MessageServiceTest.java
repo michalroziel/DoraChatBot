@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +44,7 @@ public class MessageServiceTest {
 
         when(conversationRepository.save(any(Conversation.class))).thenAnswer(invocation -> {
             Conversation conv = invocation.getArgument(0);
-            java.lang.reflect.Field idField = conv.getClass().getDeclaredField("id");
+            Field idField = conv.getClass().getDeclaredField("id");
             idField.setAccessible(true);
             idField.set(conv, 42L);
             return conv;
@@ -56,7 +57,7 @@ public class MessageServiceTest {
 
         try (MockedStatic<ApiWrapper> apiWrapperMock = Mockito.mockStatic(ApiWrapper.class)) {
             Conversation dummyConv = new Conversation();
-            java.lang.reflect.Field idField = dummyConv.getClass().getDeclaredField("id");
+            Field idField = dummyConv.getClass().getDeclaredField("id");
             idField.setAccessible(true);
             idField.set(dummyConv, 42L);
 
