@@ -4,7 +4,7 @@
  * Represents the request object for sending a chat message. This DTO carries the content of the
  * message and the ID of the conversation it belongs to.
  */
-<span class="fc" id="L7">public class ChatMessageRequest {</span>
+public class ChatMessageRequest {
   /** The text content of the chat message. */
   private String content;
 
@@ -12,12 +12,22 @@
   private Long conversationId;
 
   /**
+   * Constructs a new ChatMessageRequest with specified content and conversation ID.
+   * @param content The content of the chat message.
+   * @param conversationId The ID of the conversation to which the message belongs.
+   */
+<span class="fc" id="L19">  public ChatMessageRequest(String content, Long conversationId) {</span>
+<span class="fc" id="L20">    this.content = content;</span>
+<span class="fc" id="L21">    this.conversationId = conversationId;</span>
+<span class="fc" id="L22">  }</span>
+
+  /**
    * Gets the content of the chat message.
    *
    * @return The message content.
    */
   public String getContent() {
-<span class="nc" id="L20">    return content;</span>
+<span class="nc" id="L30">    return content;</span>
   }
 
   /**
@@ -26,8 +36,8 @@
    * @param content The message content to set.
    */
   public void setContent(String content) {
-<span class="nc" id="L29">    this.content = content;</span>
-<span class="nc" id="L30">  }</span>
+<span class="nc" id="L39">    this.content = content;</span>
+<span class="nc" id="L40">  }</span>
 
   /**
    * Gets the ID of the conversation.
@@ -35,7 +45,7 @@
    * @return The conversation ID.
    */
   public Long getConversationId() {
-<span class="nc" id="L38">    return conversationId;</span>
+<span class="nc" id="L48">    return conversationId;</span>
   }
 
   /**
@@ -44,7 +54,7 @@
    * @param conversationId The conversation ID to set.
    */
   public void setConversationId(Long conversationId) {
-<span class="nc" id="L47">    this.conversationId = conversationId;</span>
-<span class="nc" id="L48">  }</span>
+<span class="nc" id="L57">    this.conversationId = conversationId;</span>
+<span class="nc" id="L58">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

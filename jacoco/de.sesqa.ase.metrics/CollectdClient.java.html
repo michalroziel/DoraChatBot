@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
     justification =
         &quot;Socket path is intentionally hardcoded&quot;
             + &quot; for collectd integration; read result is not needed&quot;)
-<span class="nc" id="L24">public class CollectdClient {</span>
+<span class="fc" id="L24">public class CollectdClient {</span>
 
-<span class="nc" id="L26">  private static final Logger logger = LoggerFactory.getLogger(CollectdClient.class);</span>
+<span class="fc" id="L26">  private static final Logger logger = LoggerFactory.getLogger(CollectdClient.class);</span>
 
   /** The hardcoded path to the collectd UNIX socket file. */
   private static final String COLLECTD_UNIXSOCK = &quot;/var/run/collectd-unixsock&quot;;
@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
    * @param value The numeric value of the metric.
    */
   public void sendMetric(String typeInstance, CollectdType type, long value) {
-<span class="nc" id="L47">    File socketFile = new File(COLLECTD_UNIXSOCK);</span>
+<span class="fc" id="L47">    File socketFile = new File(COLLECTD_UNIXSOCK);</span>
 
 <span class="nc" id="L49">    try (AFUNIXSocket socket = connectToCollectdSocket(socketFile);</span>
 <span class="nc" id="L50">        OutputStream os = socket.getOutputStream();</span>
@@ -53,10 +53,10 @@ import org.slf4j.LoggerFactory;
 <span class="nc" id="L53">      logMetric(metric);</span>
 <span class="nc" id="L54">      writeMetricToSocket(metric, os);</span>
 <span class="nc" id="L55">      readCollectdResponse(is);</span>
-<span class="nc" id="L56">    } catch (Exception e) {</span>
-<span class="nc" id="L57">      logger.error(&quot;Failed to send metric to collectd&quot; + e.getMessage());</span>
+<span class="fc" id="L56">    } catch (Exception e) {</span>
+<span class="fc" id="L57">      logger.error(&quot;Failed to send metric to collectd&quot; + e.getMessage());</span>
 <span class="nc" id="L58">    }</span>
-<span class="nc" id="L59">  }</span>
+<span class="fc" id="L59">  }</span>
 
   /**
    * Connects to the collectd UNIX socket.
@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
    * @throws IOException if an I/O error occurs when creating or connecting the socket.
    */
   private AFUNIXSocket connectToCollectdSocket(File socketFile) throws IOException {
-<span class="nc" id="L69">    AFUNIXSocket socket = AFUNIXSocket.newInstance();</span>
+<span class="fc" id="L69">    AFUNIXSocket socket = AFUNIXSocket.newInstance();</span>
 <span class="nc" id="L70">    socket.connect(new AFUNIXSocketAddress(socketFile));</span>
 
 <span class="nc" id="L72">    return socket;</span>
@@ -81,9 +81,9 @@ import org.slf4j.LoggerFactory;
    * @return A formatted string for the PUTVAL command.
    */
   private String formatMetric(String typeInstance, CollectdType type, long value) {
-<span class="nc" id="L84">    return String.format(</span>
+<span class="fc" id="L84">    return String.format(</span>
         &quot;PUTVAL \&quot;%s/%s/%s\&quot; interval=10 N:%d%n&quot;,
-<span class="nc" id="L86">        &quot;dorachatbot&quot;, typeInstance, type.getTypeName(), value);</span>
+<span class="fc" id="L86">        &quot;dorachatbot&quot;, typeInstance, type.getTypeName(), value);</span>
   }
 
   /**
@@ -126,21 +126,21 @@ import org.slf4j.LoggerFactory;
 <span class="nc" id="L126">  }</span>
 
   /** Represents the types of metrics that can be sent to collectd. */
-<span class="nc" id="L129">  public enum CollectdType {</span>
+<span class="fc" id="L129">  public enum CollectdType {</span>
     /** A gauge value is for storing values that can increase or decrease, like temperature. */
-<span class="nc" id="L131">    GAUGE(&quot;gauge&quot;),</span>
+<span class="fc" id="L131">    GAUGE(&quot;gauge&quot;),</span>
     /**
      * A counter is for values that only increase, like the number of requests. It will be reset on
      * overflow.
      */
-<span class="nc" id="L136">    COUNTER(&quot;counter&quot;),</span>
+<span class="fc" id="L136">    COUNTER(&quot;counter&quot;),</span>
     /**
      * A derive value is stored as a rate of change. It's like a counter but for non-monotonic
      * values.
      */
-<span class="nc" id="L141">    DERIVE(&quot;derive&quot;),</span>
+<span class="fc" id="L141">    DERIVE(&quot;derive&quot;),</span>
     /** An absolute value is for counters that are reset upon reading. */
-<span class="nc" id="L143">    ABSOLUTE(&quot;absolute&quot;);</span>
+<span class="fc" id="L143">    ABSOLUTE(&quot;absolute&quot;);</span>
 
     private final String typeName;
 
@@ -149,9 +149,9 @@ import org.slf4j.LoggerFactory;
      *
      * @param typeName The string representation of the type used by collectd.
      */
-<span class="nc" id="L152">    CollectdType(String typeName) {</span>
-<span class="nc" id="L153">      this.typeName = typeName;</span>
-<span class="nc" id="L154">    }</span>
+<span class="fc" id="L152">    CollectdType(String typeName) {</span>
+<span class="fc" id="L153">      this.typeName = typeName;</span>
+<span class="fc" id="L154">    }</span>
 
     /**
      * Gets the string name of the metric type.
@@ -159,7 +159,7 @@ import org.slf4j.LoggerFactory;
      * @return The name of the type as a string.
      */
     public String getTypeName() {
-<span class="nc" id="L162">      return typeName;</span>
+<span class="fc" id="L162">      return typeName;</span>
     }
   }
 }
