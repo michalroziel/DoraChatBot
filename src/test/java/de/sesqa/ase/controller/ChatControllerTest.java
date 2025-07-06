@@ -32,7 +32,7 @@ class ChatControllerTest {
   @Test
   @DisplayName("handleMessage returns response from messageService for valid request")
   void handleMessageReturnsResponseForValidRequest() {
-    ChatMessageRequest request = new ChatMessageRequest();
+    ChatMessageRequest request = new ChatMessageRequest("Test message", 1L);
     ChatMessageResponse expectedResponse = new ChatMessageResponse("Test response", 1L);
     when(messageService.handleMessage(request)).thenReturn(expectedResponse);
 
@@ -96,4 +96,53 @@ class ChatControllerTest {
 
     assertThat(result).isEmpty();
   }
+
+  @Test
+  @DisplayName("handleMessage throws exception from service gracefully")
+  void handleMessageHandlesServiceException() {
+    ChatMessageRequest request = new ChatMessageRequest("Test message", 1L);
+    when(messageService.handleMessage(request)).thenThrow(new RuntimeException("Service error"));
+
+    assertThatThrownBy(() -> chatController.handleMessage(request))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Service error");
+  }
+
+  @Test
+  @DisplayName("getHistory throws exception from conversationService gracefully")
+  void getHistoryThrowsExceptionGracefully() {
+    when(conversationService.getHistory()).thenThrow(new RuntimeException("Database error"));
+
+    assertThatThrownBy(() -> chatController.getHistory())
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Database error");
+  }
+
+  @Test
+  @DisplayName("getConversation throws exception from conversationService gracefully")
+  void getConversationThrowsExceptionGracefully() {
+    Long conversationId = 42L;
+    when(conversationService.getConversationMessages(conversationId))
+            .thenThrow(new RuntimeException("Failed to fetch messages"));
+
+    assertThatThrownBy(() -> chatController.getConversation(conversationId))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Failed to fetch messages");
+  }
+
+  @Test
+  @DisplayName("handleMessage handles invalid request with empty fields gracefully")
+  void handleMessageHandlesEmptyFields() {
+    ChatMessageRequest request = new ChatMessageRequest(null, null); // Keine content/conversationId gesetzt
+    ChatMessageResponse expected = new ChatMessageResponse("Request cannot be null.", null);
+
+    when(messageService.handleMessage(request)).thenReturn(expected);
+
+    ChatMessageResponse response = chatController.handleMessage(request);
+
+    assertThat(response.getContent()).isEqualTo("Request cannot be null.");
+    assertThat(response.getConversationId()).isNull();
+  }
+
+
 }
