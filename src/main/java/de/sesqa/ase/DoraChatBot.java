@@ -39,8 +39,7 @@ public class DoraChatBot {
    * required for the SQLite database file. If the directory cannot be created, an exception is
    * thrown.
    */
-  @PostConstruct
-  public void ensureDataDirectoryExists() {
+  private static void ensureDataDirectoryExists() {
     File dataDir = new File("data");
     if (!dataDir.exists()) {
       if (!dataDir.mkdirs()) {
@@ -56,6 +55,7 @@ public class DoraChatBot {
    * @param args command-line arguments passed to the application
    */
   public static void main(final String[] args) {
+    ensureDataDirectoryExists();
     SpringApplication.run(DoraChatBot.class, args);
   }
 }
