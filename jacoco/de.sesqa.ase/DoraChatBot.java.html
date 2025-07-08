@@ -39,16 +39,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
    * required for the SQLite database file. If the directory cannot be created, an exception is
    * thrown.
    */
-  @PostConstruct
-  public void ensureDataDirectoryExists() {
-<span class="nc" id="L44">    File dataDir = new File(&quot;data&quot;);</span>
-<span class="nc bnc" id="L45" title="All 2 branches missed.">    if (!dataDir.exists()) {</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">      if (!dataDir.mkdirs()) {</span>
-<span class="nc" id="L47">        throw new IllegalStateException(</span>
-<span class="nc" id="L48">            &quot;Failed to create required data directory: &quot; + dataDir.getAbsolutePath());</span>
+  private static void ensureDataDirectoryExists() {
+<span class="nc" id="L43">    File dataDir = new File(&quot;data&quot;);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">    if (!dataDir.exists()) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">      if (!dataDir.mkdirs()) {</span>
+<span class="nc" id="L46">        throw new IllegalStateException(</span>
+<span class="nc" id="L47">            &quot;Failed to create required data directory: &quot; + dataDir.getAbsolutePath());</span>
       }
     }
-<span class="nc" id="L51">  }</span>
+<span class="nc" id="L50">  }</span>
 
   /**
    * Main method to launch the Spring Boot application.
@@ -56,6 +55,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
    * @param args command-line arguments passed to the application
    */
   public static void main(final String[] args) {
+<span class="nc" id="L58">    ensureDataDirectoryExists();</span>
 <span class="nc" id="L59">    SpringApplication.run(DoraChatBot.class, args);</span>
 <span class="nc" id="L60">  }</span>
 }

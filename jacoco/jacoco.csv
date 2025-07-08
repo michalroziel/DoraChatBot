@@ -11,6 +11,6 @@ DoraChatBot,de.sesqa.ase.entities,Message,9,31,2,2,2,9,4,5,2,5
 DoraChatBot,de.sesqa.ase.entities,Conversation,0,37,0,4,0,10,0,7,0,5
 DoraChatBot,de.sesqa.ase.metrics,CollectdClient,55,67,0,2,16,15,2,7,2,6
 DoraChatBot,de.sesqa.ase.metrics,CollectdClient.CollectdType,0,42,0,0,0,9,0,3,0,3
-DoraChatBot,de.sesqa.ase,DoraChatBot,27,0,4,0,9,0,5,0,3,0
+DoraChatBot,de.sesqa.ase,DoraChatBot,28,0,4,0,10,0,5,0,3,0
 DoraChatBot,de.sesqa.ase.controller,IndexController,0,28,0,0,0,7,0,3,0,3
 DoraChatBot,de.sesqa.ase.controller,ChatController,0,23,0,0,0,7,0,4,0,4
