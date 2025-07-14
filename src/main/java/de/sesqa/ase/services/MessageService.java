@@ -66,27 +66,39 @@ public class MessageService {
      * @return A {@link ChatMessageResponse} containing the bot's reply and the conversation ID.
      */
     public ChatMessageResponse handleMessage(@RequestBody ChatMessageRequest request) {
+        long startTime = System.currentTimeMillis(); // --- Start Measurement ---
+
         if (request == null) {
             logger.error("Received null ChatMessageRequest");
-
             return new ChatMessageResponse("Request cannot be null.", null);
         }
         logger.info(
                 """
-                        Received chat message request:\
+                        Received chat message request:\s
                         
                         conversationId: {}
                         content: {}""",
                 request.getConversationId(),
-                request.getContent());
+                request.getContent()
+        );
 
+
+        Long conversationId = request.getConversationId();
         try {
-            Conversation conversation = getOrCreateConversation(request.getConversationId());
+            Conversation conversation = getOrCreateConversation(conversationId);
+            ChatMessageResponse response = processChatInteraction(conversation, request);
 
-            return processChatInteraction(conversation, request);
+            // --- End Measurement & Send Metric on Success ---
+            long duration = System.currentTimeMillis() - startTime;
+            collectdClient.sendMetric("total_request_time", CollectdClient.CollectdType.GAUGE, duration);
+
+            return response;
         } catch (Exception e) {
             logger.error("Error processing message", e);
-            Long conversationId = request.getConversationId();
+
+            // --- End Measurement & Send Metric on Error ---
+            long duration = System.currentTimeMillis() - startTime;
+            collectdClient.sendMetric("total_request_time", CollectdClient.CollectdType.GAUGE, duration);
 
             return new ChatMessageResponse("Error processing message: " + e.getMessage(), conversationId);
         }
@@ -107,7 +119,12 @@ public class MessageService {
         sendReceivedMetrics();
 
         Message userMsg = saveUserMessage(conversation, request.getContent());
+
+        long startTime = System.currentTimeMillis();
         Message responseMessage = ApiWrapper.query(userMsg);
+        long duration = System.currentTimeMillis() - startTime;
+        collectdClient.sendMetric("api_response_time", CollectdClient.CollectdType.GAUGE, duration);
+
         logger.info("Received response from APIWrapper: '{}'", responseMessage.getContent());
 
         if (responseMessage.isEmpty()) {
@@ -133,6 +150,11 @@ public class MessageService {
         Conversation conversation = new Conversation();
         conversationRepository.save(conversation);
         logger.info("New conversation started with ID: {}", conversation.getId());
+
+        // --- Send Metric ---
+        long totalConversations = conversationRepository.count();
+        collectdClient.sendMetric(
+                "conversations_created", CollectdClient.CollectdType.COUNTER, totalConversations);
 
         return conversation;
     }
