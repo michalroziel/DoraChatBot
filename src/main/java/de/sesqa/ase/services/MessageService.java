@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Service class responsible for handling chat messages, managing conversations, persisting
@@ -41,6 +42,10 @@ public class MessageService {
      * Client for sending metrics to Collectd.
      */
     private final CollectdClient collectdClient;
+
+
+    // Add this field to your MessageService class
+    private final AtomicLong totalApiCalls = new AtomicLong(0);
 
     /**
      * Constructs the MessageService with necessary repositories.
@@ -120,10 +125,16 @@ public class MessageService {
 
         Message userMsg = saveUserMessage(conversation, request.getContent());
 
+        // --- API Call and Performance Metric ---
         long startTime = System.currentTimeMillis();
         Message responseMessage = ApiWrapper.query(userMsg);
         long duration = System.currentTimeMillis() - startTime;
         collectdClient.sendMetric("api_response_time", CollectdClient.CollectdType.GAUGE, duration);
+
+        // --- API Call Counter Metric ---
+        long newTotalCalls = totalApiCalls.incrementAndGet();
+        collectdClient.sendMetric("api_calls_total", CollectdClient.CollectdType.COUNTER, newTotalCalls);
+        // --- End of Metric ---
 
         logger.info("Received response from APIWrapper: '{}'", responseMessage.getContent());
 
